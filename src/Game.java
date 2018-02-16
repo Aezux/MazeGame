@@ -1,5 +1,4 @@
 
-import java.util.ArrayList;
 import java.util.Random;
 
 import javafx.application.Application;
@@ -26,7 +25,7 @@ public class Game extends Application{
 	
 	
 	ImageView playerView;
-	ArrayList<ImageView> pirateImages;
+	ImageView treasureView;
 	
 	Stage mainStage;
 	Scene Gamescene;
@@ -51,7 +50,7 @@ public class Game extends Application{
 		
 		/* Places all the pictures on the pane and allows the player to control the ship */
 		loadMap();
-		startSailing();
+		movePlayer();
 		
 		/* Sets the title and displays the GUI */
 		mainStage.setTitle("Maze Game");
@@ -60,7 +59,7 @@ public class Game extends Application{
 	}
 	
 	/* The player controls the ship with the keyboard */
-	public void startSailing() {
+	public void movePlayer() {
 		
 		Gamescene.setOnKeyPressed(new EventHandler<KeyEvent>() {
 			public void handle(KeyEvent ke) {
@@ -117,10 +116,19 @@ public class Game extends Application{
 			for (int j=0; j<dimensions; ++j) {
 				
 				int rng = getRandomNumber(3) + 1;
-				if (map[i][j] == 0) {
-					image = getImage("floor" + rng + ".png");
-				} else {					
-					image = getImage("wall" + rng + ".png");
+				
+				switch (map[i][j]) {
+					case 0: image = getImage("floor" + rng + ".png"); break;
+					case 1: image = getImage("wall" + rng + ".png"); break;
+					case 2: image = getImage("downLight.png"); break;
+//					case 3: break;
+					case 4: image = getImage("leftLight.png"); break;
+//					case 5: break;
+					case 6: image = getImage("rightLight.png"); break;
+					case 7: image = getImage("trap.png"); break;
+					case 8: image = getImage("upLight.png"); break;
+//					case 9: break;
+					default: image = null; break;
 				}
 				
 				imageView = new ImageView(image);
@@ -129,6 +137,12 @@ public class Game extends Application{
 				root.getChildren().add(imageView);
 			}
 		}
+		
+		/* Adds the treasure image */
+		treasureView = new ImageView(getImage("chest.png"));
+		treasureView.setX(dungeonMap.getTreasureLocation().x * scale);
+		treasureView.setY(dungeonMap.getTreasureLocation().y * scale);
+		root.getChildren().add(treasureView);
 		
 		/* Adds the player image */
 		playerView = new ImageView(getImage("backView.png"));

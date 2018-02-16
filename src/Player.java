@@ -25,8 +25,7 @@ public class Player {
 	}
 	
 	private boolean checkWall(int x, int y) {
-		int n = map[x][y];
-		return (n == 1 || n == 2 || n == 3);
+		return map[x][y] == 1;
 	}
 	
 	/* Move the player */

@@ -2,22 +2,40 @@ import java.awt.Point;
 import java.util.ArrayList;
 import java.util.Random;
 
+/* 
+ *    Map Creation Codes:
+ *    0: Floor
+ *    1: Wall
+ *    2: tile with light on the bottom
+ *    3: N/A
+ *    4: tile with light on the left
+ *    5: N/A
+ *    6: tile with light on the right
+ *    7: trap
+ *    8: tile with light on the top
+ *    9: N/A
+ *    
+ * */
+
 public class DungeonMap {
 	
 	private int[][] map;
 	private ArrayList<Integer> openSpots;
 	private Point playerLocation;
+	private Point treasureLocation;
+	private int dimensions;
 	private int walls;
+	private int traps = 3;
 	
 	Random rand = new Random();
 	
 	/* Constructor */
 	public DungeonMap(int dimensions, int walls) {
 		this.map = new int[dimensions][dimensions];
+		this.dimensions = dimensions;
 		this.walls = walls;
 		openSpots = new ArrayList<Integer>();
 		buildMap();
-		setLocations();
 	}
 	
 	/* Returns map */
@@ -25,9 +43,14 @@ public class DungeonMap {
 		return map;
 	}
 	
-	/* Returns the players location */
+	/* Returns the player's location */
 	public Point getPlayerLocation() {
 		return playerLocation;
+	}
+	
+	/* Returns the treasure's location */
+	public Point getTreasureLocation() {
+		return treasureLocation;
 	}
 	
 	/* Returns a Point where there is an empty spot */
@@ -40,16 +63,51 @@ public class DungeonMap {
 		return new Point(x, y);
 	}
 	
-	/* Sets the walls and the player's location */
+	/* Sets all trap and wall locations */
 	private void setLocations() {
-		playerLocation = generateLocation();
+		int x, y;
+
+		/* Generate the traps */
+		for (int i=0; i<traps; ++i) {
+			Point trapSpot = generateLocation();
+			x = trapSpot.x; y = trapSpot.y;
+			Integer pos = x * map.length + y;
+			openSpots.remove(pos);
+			map[x][y] = 7;
+		}
+		
+		/* Generate the inner walls */
 		for (int i=0; i<walls; ++i) {
 			Point wallSpot = generateLocation();
-			int x = wallSpot.x, y = wallSpot.y;
+			x = wallSpot.x; y = wallSpot.y;
 			Integer pos = x * map.length + y;
 			openSpots.remove(pos);
 			map[x][y] = 1;
 		}
+	}
+	
+	/* Sets the players and treasures location */
+	private void setObjectives() {
+		playerLocation = generateLocation();
+		treasureLocation = generateLocation();
+	}
+	
+	/* Builds all the exits on the map */
+	private void buildExits() {
+		int size = dimensions-1;
+		int half = size/2;
+		
+		/* Top */
+		map[half][0] = 8;
+		
+		/* Bottom */
+		map[half][size] = 2;
+		
+		/* Left */
+		map[0][half] = 4;
+		
+		/* Right */
+		map[size][half] = 6;
 	}
 	
 	/* Creates the map */
@@ -58,7 +116,7 @@ public class DungeonMap {
 			for (int j=0; j<map.length; ++j) {
 				
 				/* Top */
-				if (j == 0    ) {
+				if (j == 0) {
 					map[i][j] = 1;
 				}
 				
@@ -79,6 +137,9 @@ public class DungeonMap {
 				}
 			}
 		}
+		buildExits();
+		setLocations();
+		setObjectives();
 	}
 	
 	/* Generates a random number */
