@@ -139,7 +139,7 @@ public class Game extends Application{
 		}
 		
 		/* Adds the treasure image */
-		treasureView = new ImageView(getImage("chest.png"));
+		treasureView = new ImageView(getImage("chest1.png"));
 		treasureView.setX(dungeonMap.getTreasureLocation().x * scale);
 		treasureView.setY(dungeonMap.getTreasureLocation().y * scale);
 		root.getChildren().add(treasureView);
