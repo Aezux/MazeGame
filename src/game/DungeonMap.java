@@ -24,6 +24,9 @@ public class DungeonMap {
 	private ArrayList<Integer> openSpots;
 	private Point playerLocation;
 	private Point treasureLocation;
+	private Point armorLocation;
+	private Point invisibleLocation;
+	private Point speedLocation;
 	private int dimensions;
 	private int walls;
 	private int traps = 3;
@@ -52,6 +55,18 @@ public class DungeonMap {
 	/* Returns the treasure's location */
 	public Point getTreasureLocation() {
 		return treasureLocation;
+	}
+	/* Returns the armor's location */
+	public Point getArmorLocation() {
+		return armorLocation;
+	}
+	/* Returns the invisible's Location */
+	public Point getInvisibleLocation() {
+		return invisibleLocation;
+	}
+	/* Returns the speed's Location */
+	public Point getSpeedLocation() {
+		return speedLocation;
 	}
 	
 	/* Returns a Point where there is an empty spot */
@@ -91,6 +106,10 @@ public class DungeonMap {
 	private void setObjectives() {
 		playerLocation = generateLocation();
 		treasureLocation = generateLocation();
+		armorLocation = generateLocation();
+		invisibleLocation = generateLocation();
+		speedLocation = generateLocation();
+		
 	}
 	
 	/* Builds all the exits on the map */

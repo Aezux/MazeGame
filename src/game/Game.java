@@ -10,7 +10,11 @@ import javafx.scene.input.KeyEvent;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.Pane;
 import javafx.stage.Stage;
+import powerups.*;
 
+import java.awt.Point;
+
+@SuppressWarnings("unused")
 public class Game extends Application{
 	
 	Random rand = new Random();
@@ -22,7 +26,6 @@ public class Game extends Application{
 	
 	Player player;
 	DungeonMap dungeonMap;
-	
 	
 	ImageView playerView;
 	ImageView treasureView;
@@ -58,7 +61,7 @@ public class Game extends Application{
 		mainStage.show();
 	}
 	
-	/* The player controls the ship with the keyboard */
+	/* The player controls the knight with the keyboard */
 	public void movePlayer() {
 		
 		Gamescene.setOnKeyPressed(new EventHandler<KeyEvent>() {
@@ -90,6 +93,7 @@ public class Game extends Application{
 				int playerY = player.getPlayerLocation().y;
 				playerView.setX(playerX * scale);
 				playerView.setY(playerY * scale);
+				
 			}
 		});
 	}
@@ -149,6 +153,27 @@ public class Game extends Application{
 		playerView.setX(player.getPlayerLocation().x * scale);
 		playerView.setY(player.getPlayerLocation().y * scale);
 		root.getChildren().add(playerView);
+		
+		/* Adds the armor image */
+		ImageView ArmorView = new ImageView(getImage("armor.png"));
+		ArmorView.setX(dungeonMap.getArmorLocation().x * scale);
+		ArmorView.setY(dungeonMap.getArmorLocation().y * scale);
+		root.getChildren().add(ArmorView);
+		
+		/* Adds the invisible image */
+		ImageView InvisibleView = new ImageView(getImage("gem.png"));
+		InvisibleView.setX(dungeonMap.getInvisibleLocation().x * scale);
+		InvisibleView.setY(dungeonMap.getInvisibleLocation().y * scale);
+		root.getChildren().add(InvisibleView);
+		
+		/* Adds the speed image */
+		ImageView SpeedView = new ImageView(getImage("speed.png"));
+		SpeedView.setX(dungeonMap.getSpeedLocation().x * scale);
+		SpeedView.setY(dungeonMap.getSpeedLocation().y * scale);
+		root.getChildren().add(SpeedView);
+		
+		/*Loops through Background Music */
+		BackgroundMusic.backgroundmusic.loop();
 	}
 	
 	/* Generates a random number */

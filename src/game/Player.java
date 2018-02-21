@@ -1,11 +1,14 @@
 package game;
 import java.awt.Point;
 
+@SuppressWarnings("unused")
 public class Player {
 
 	private int[][] map;
 	private Point currentLocation;
 	private int X, Y;
+	private boolean hasKey = false;
+	
 	
 	/* Constructor */
 	public Player(DungeonMap map) {
@@ -20,7 +23,7 @@ public class Player {
 		this.Y = (int) currentLocation.getY();
 	}
 
-	/* Returns the ship's location */
+	/* Returns the player's location */
 	public Point getPlayerLocation() {
 		return currentLocation;
 	}
