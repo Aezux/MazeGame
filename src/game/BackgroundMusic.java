@@ -1,5 +1,7 @@
 package game;
 
+import java.io.File;
+
 import javax.sound.sampled.*;
 
 import javafx.scene.image.Image;
@@ -7,31 +9,35 @@ import javafx.scene.image.Image;
 @SuppressWarnings("unused")
 public class BackgroundMusic {
     private Clip clip;
-    public static BackgroundMusic backgroundmusic = new BackgroundMusic("backgroundmusic.wav");
-    public static BackgroundMusic collectedgem = new BackgroundMusic("collectedgem.wav");
+    public static BackgroundMusic backgroundmusic = getFile("backgroundmusic.wav");
+    public static BackgroundMusic collectedgem = getFile("collectedgem.wav");
+    public static BackgroundMusic chestopen = getFile("chestopen.wav");
+    
+    /* Constructor */
     public BackgroundMusic (String fileName) {
-    try {
-            AudioInputStream ais = AudioSystem.getAudioInputStream(BackgroundMusic.class.getResource(fileName));
-            clip = AudioSystem.getClip();
-            clip.open(ais);
+    	try {
+            File file = new File(fileName);
+            if (file.exists()) {
+                AudioInputStream sound = AudioSystem.getAudioInputStream(file);
+                clip = AudioSystem.getClip();
+                clip.open(sound);
+            }
         } catch (Exception e) {
             e.printStackTrace();
         }
     }  
-    
-    private static BackgroundMusic getFile(String type) {
+    /* Gets the correct soundfile regardless of what operating system you are using */
+    private static BackgroundMusic getFile(String filename) {
 		String file;
 		if (System.getProperty("os.name").startsWith("Windows")) {
-			file = "MazeGame\\sounds\\" + type;
+			file = "sounds\\" + filename;
 		} else {
-			file = "MazeGame//sounds//" + type;
+			file = "sounds//" + filename;
 		}
-		System.out.println(file);
-		
-		BackgroundMusic sound1 = new BackgroundMusic(file);
-		return sound1;
+		BackgroundMusic sound = new BackgroundMusic(file);
+		return sound;
 	}
-    
+    /* Plays the .wav file */
     public void play() {
     try {
         if (clip != null) {
@@ -49,10 +55,12 @@ public class BackgroundMusic {
             e.printStackTrace();
         }
     }
+    /* Stops the .wav file */
     public void stop(){
         if(clip == null) return;
         clip.stop();
     }
+    /* Loops through the .wav file */
     public void loop() {
         try {
             if (clip != null) {
@@ -70,6 +78,7 @@ public class BackgroundMusic {
             e.printStackTrace();
         }
     }
+    /* Checks if clip is currently playing */
     public boolean isActive(){
         return clip.isActive();
     }
