@@ -27,9 +27,12 @@ public class DungeonMap {
 	private Point armorLocation;
 	private Point invisibleLocation;
 	private Point speedLocation;
+	private Point keyLocation;
 	private int dimensions;
 	private int walls;
 	private int traps = 3;
+	@SuppressWarnings("unused")
+	private Point[] RandomItems;
 	
 	Random rand = new Random();
 	
@@ -56,19 +59,41 @@ public class DungeonMap {
 	public Point getTreasureLocation() {
 		return treasureLocation;
 	}
+	/* Sets the treasure's location to null after picked up */
+	public void setTreasuretoNull() {
+		treasureLocation = null;
+	}
+	
 	/* Returns the armor's location */
 	public Point getArmorLocation() {
 		return armorLocation;
+	}
+	/* Sets the armor's location to null after picked up */
+	public void setArmortoNull() {
+		armorLocation = null;
 	}
 	/* Returns the invisible's Location */
 	public Point getInvisibleLocation() {
 		return invisibleLocation;
 	}
+	/* Sets the invisible location to null after picked up */
+	public void setInvisbletoNull() {
+		invisibleLocation = null;
+	}
 	/* Returns the speed's Location */
 	public Point getSpeedLocation() {
 		return speedLocation;
 	}
-	
+	/* Sets the speed's location to null after picked up */
+	public void setSpeedtoNull() {
+		speedLocation = null;
+	}
+	public Point getKeyLocation() {
+		return keyLocation;
+	}
+	public void setKeytoNull() {
+		keyLocation = null;
+	}
 	/* Returns a Point where there is an empty spot */
 	private Point generateLocation() {
 		int N = getRandomNumber(openSpots.size());
@@ -109,6 +134,7 @@ public class DungeonMap {
 		armorLocation = generateLocation();
 		invisibleLocation = generateLocation();
 		speedLocation = generateLocation();
+		keyLocation = generateLocation();
 		
 	}
 	
