@@ -110,10 +110,11 @@ public class DungeonMap {
 		invisibleLocation = generateLocation();
 		speedLocation = generateLocation();
 		
-	}
+	} 
 	
 	/* Builds all the exits on the map */
 	private void buildExits() {
+		ArrayList<Integer> exitPath = new ArrayList<Integer>();
 		int size = dimensions-1;
 		int half = size/2;
 		
@@ -122,19 +123,40 @@ public class DungeonMap {
 		
 		/* Bottom */
 		map[half][size] = 2;
-		
+
 		/* Left */
 		map[0][half] = 4;
-		
+
 		/* Right */
-		map[size][half] = 6;
+		map[size][half] = 6;		
+		
+		/* Clears the path around the exits */
+		exitPath.add(new Integer(22));
+		exitPath.add(new Integer(23));
+		exitPath.add(new Integer(24));
+		
+		exitPath.add(new Integer(201));
+		exitPath.add(new Integer(202));
+		exitPath.add(new Integer(203));
+		
+		exitPath.add(new Integer(91));
+		exitPath.add(new Integer(106));
+		exitPath.add(new Integer(121));
+		
+		exitPath.add(new Integer(104));
+		exitPath.add(new Integer(119));
+		exitPath.add(new Integer(134));
+		
+		for (Integer path : exitPath) {
+			openSpots.remove(path);
+		}
 	}
 	
 	/* Creates the map */
 	private void buildMap() {
 		for (int i=0; i<map.length; ++i) {
 			for (int j=0; j<map.length; ++j) {
-				
+
 				/* Top */
 				if (j == 0) {
 					map[i][j] = 1;

@@ -33,7 +33,7 @@ public class Game extends Application{
 	Stage mainStage;
 	Scene Gamescene;
 	Pane root;
-	
+	   
 	/* Launches the GUI */
 	public static void main(String[] args) {
 		launch(args);
@@ -148,12 +148,6 @@ public class Game extends Application{
 		treasureView.setY(dungeonMap.getTreasureLocation().y * scale);
 		root.getChildren().add(treasureView);
 		
-		/* Adds the player image */
-		playerView = new ImageView(getImage("backView.png"));
-		playerView.setX(player.getPlayerLocation().x * scale);
-		playerView.setY(player.getPlayerLocation().y * scale);
-		root.getChildren().add(playerView);
-		
 		/* Adds the armor image */
 		ImageView ArmorView = new ImageView(getImage("armor.png"));
 		ArmorView.setX(dungeonMap.getArmorLocation().x * scale);
@@ -171,6 +165,12 @@ public class Game extends Application{
 		SpeedView.setX(dungeonMap.getSpeedLocation().x * scale);
 		SpeedView.setY(dungeonMap.getSpeedLocation().y * scale);
 		root.getChildren().add(SpeedView);
+		
+		/* Adds the player image */
+		playerView = new ImageView(getImage("backView.png"));
+		playerView.setX(player.getPlayerLocation().x * scale);
+		playerView.setY(player.getPlayerLocation().y * scale);
+		root.getChildren().add(playerView);
 		
 		/*Loops through Background Music */
 		BackgroundMusic.backgroundmusic.loop();

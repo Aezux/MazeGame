@@ -1,6 +1,6 @@
 package game;
 import java.awt.Point;
-
+ 
 @SuppressWarnings("unused")
 public class Player {
 
@@ -28,6 +28,12 @@ public class Player {
 		return currentLocation;
 	}
 	
+	/* Checks if the player is in bounds */
+	private boolean checkBounds(int x, int y, int size) {
+        return ((x-1 >= -1) && (x + 1 <= size) && (y-1 >= -1) && (y+1 <= size));
+    }
+	
+	/* Checks if there is a wall */
 	private boolean checkWall(int x, int y) {
 		return map[x][y] == 1;
 	}
@@ -36,26 +42,14 @@ public class Player {
 	public void move(String direction) {
 		updateCoordinates();
 		switch (direction) {
-			case "North":
-				if (!checkWall(X, Y-1)) {
-					currentLocation.setLocation(X, Y-1);
-				}
-			break;
-			case "South":
-				if (!checkWall(X, Y+1)) {
-					currentLocation.setLocation(X, Y+1);
-				}
-			break;
-			case "East":
-				if (!checkWall(X+1, Y)) {
-					currentLocation.setLocation(X+1, Y);
-				}
-			break;
-			case "West":
-				if (!checkWall(X-1, Y)) {
-					currentLocation.setLocation(X-1, Y);
-				}
-			break;
+			case "North": --Y; break;
+			case "South": ++Y; break;
+			case "East":  ++X; break;
+			case "West":  --X; break;
+		}
+		
+		if ( checkBounds(X, Y, map.length) && !checkWall(X, Y) ) {
+			currentLocation.setLocation(X, Y);
 		}
 	}
 
