@@ -5,13 +5,14 @@ import java.awt.Point;
 public class Player {
 
 	private int[][] map;
+	private DungeonMap dungeon;
 	private Point currentLocation;
 	private int X, Y;
 	private boolean hasKey = false;
 	
-	
 	/* Constructor */
 	public Player(DungeonMap map) {
+		this.dungeon = map;
 		this.map = map.getMap();
 		this.currentLocation = map.getPlayerLocation();
 		updateCoordinates();
@@ -48,8 +49,9 @@ public class Player {
 			case "West":  --X; break;
 		}
 		
-		if ( checkBounds(X, Y, map.length) && !checkWall(X, Y) ) {
+		if (checkBounds(X, Y, map.length) && !checkWall(X, Y)) {
 			currentLocation.setLocation(X, Y);
+			dungeon.setPlayerLocation(currentLocation);
 		}
 	}
 

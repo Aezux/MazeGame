@@ -55,6 +55,11 @@ public class DungeonMap {
 		return playerLocation;
 	}
 	
+	/* Updates the player's location */
+	public void setPlayerLocation(Point playerLocation) {
+		this.playerLocation = playerLocation;
+	}
+	
 	/* Returns the treasure's location */
 	public Point getTreasureLocation() {
 		return treasureLocation;
