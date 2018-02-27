@@ -23,6 +23,7 @@ public class DungeonMap {
 	private int[][] map;
 	private ArrayList<Integer> openSpots;
 	private Point playerLocation;
+	private Point fireLocation;
 	private Point treasureLocation;
 	private Point armorLocation;
 	private Point invisibleLocation;
@@ -53,6 +54,11 @@ public class DungeonMap {
 	/* Returns the player's location */
 	public Point getPlayerLocation() {
 		return playerLocation;
+	}
+	
+	/* Returns the fireball's location */
+	public Point getFireLocation() {
+		return fireLocation;
 	}
 	
 	/* Updates the player's location */
@@ -135,6 +141,7 @@ public class DungeonMap {
 	/* Sets the players and treasures location */
 	private void setObjectives() {
 		playerLocation = generateLocation();
+		fireLocation = generateLocation();
 		treasureLocation = generateLocation();
 		armorLocation = generateLocation();
 		invisibleLocation = generateLocation();

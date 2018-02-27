@@ -31,9 +31,11 @@ public class Game extends Application {
 	final int scale = 50;
 
 	Player player;
+	Fireball fireBall;
 	DungeonMap dungeonMap;
 
 	ImageView playerView;
+	ImageView fireView;
 	ImageView treasureView;
 	ImageView invisibleView;
 	ImageView speedView;
@@ -51,7 +53,7 @@ public class Game extends Application {
 
 	/* Starts the whole program with the input scene */
 	public void start(Stage game) throws Exception {
-		/* Creates a menubar on the top containing File, Restart, Quit */
+		/* Creates a menu bar on the top containing File, Restart, Quit */
 		MenuBar menuBar = new MenuBar();
 		Menu menu = new Menu("File");
 		MenuItem restart = new MenuItem("Restart");
@@ -74,9 +76,10 @@ public class Game extends Application {
 		dungeonMap = new DungeonMap(dimensions, walls);
 		map = dungeonMap.getMap();
 		player = new Player(dungeonMap);
+		fireBall = new Fireball(dungeonMap, player);
 
 		/*
-		 * Places all the pictures on the pane and allows the player to control the ship
+		 * Places all the pictures on the pane and allows the user to control the player
 		 */
 		loadMap();
 		movePlayer();
@@ -92,36 +95,31 @@ public class Game extends Application {
 	public void movePlayer() {
 
 		Gamescene.setOnKeyPressed(new EventHandler<KeyEvent>() {
-			public void handle(KeyEvent ke) {
+			public void handle(KeyEvent event) {
 
 				/* Moves the ship using the keyboard */
-				switch (ke.getCode()) {
-				case UP:
-					player.move("North");
-					playerView.setImage(getImage("backView.png"));
-					break;
-				case DOWN:
-					player.move("South");
-					playerView.setImage(getImage("frontView.png"));
-					break;
-				case LEFT:
-					player.move("West");
-					playerView.setImage(getImage("leftView.png"));
-					break;
-				case RIGHT:
-					player.move("East");
-					playerView.setImage(getImage("rightView.png"));
-					break;
-				default:
-					break;
+				switch (event.getCode()) {
+					case UP: player.move("North"); break;
+					case DOWN: player.move("South"); break;
+					case LEFT: player.move("West"); break;
+					case RIGHT: player.move("East"); break;
+					default: break;
 				}
 
-				/* Get and set the players coordinates */
+				/* Update the player */
+				playerView.setImage(player.newImage());
 				int playerX = player.getPlayerLocation().x;
 				int playerY = player.getPlayerLocation().y;
 				playerView.setX(playerX * scale);
 				playerView.setY(playerY * scale);
-
+				
+				/* Update the fireball */
+				fireView.setImage(fireBall.newImage());
+				int fireX = fireBall.getFireLocation().x;
+				int fireY = fireBall.getFireLocation().y;
+				fireView.setX(fireX * scale);
+				fireView.setY(fireY * scale);
+				
 				/*
 				 * Check if playerlocation is same as gem, if so play collectedgem.wav and
 				 * remove gem from dungeonMap, sets the invisibleLocation to null
@@ -168,22 +166,8 @@ public class Game extends Application {
 					keyView.imageProperty().set(null);
 					dungeonMap.setTreasuretoNull();
 				}
-
-
 			}
 		});
-	}
-
-	/* Gets the correct image regardless of what operating system you are using */
-	private Image getImage(String type) {
-		String file;
-		if (System.getProperty("os.name").startsWith("Windows")) {
-			file = "file:images\\" + type;
-		} else {
-			file = "file:images//" + type;
-		}
-		Image image = new Image(file, 50, 50, true, true);
-		return image;
 	}
 
 	/* Adds pictures to the pane */
@@ -198,40 +182,23 @@ public class Game extends Application {
 				int rng = getRandomNumber(3) + 1;
 
 				switch (map[i][j]) {
-				case 0:
-					image = getImage("floor" + rng + ".png");
-					break;
-				case 1:
-					image = getImage("wall" + rng + ".png");
-					break;
-				case 2:
-					image = getImage("downLight.png");
-					break;
-				// case 3: break;
-				case 4:
-					image = getImage("leftLight.png");
-					break;
-				// case 5: break;
-				case 6:
-					image = getImage("rightLight.png");
-					break;
-				case 7:
-					image = getImage("trap.png");
-					break;
-				case 8:
-					image = getImage("upLight.png");
-					break;
-				// case 9: break;
-				default:
-					image = null;
-					break;
+					case 0: image = getImage("floor" + rng + ".png"); break;
+					case 1: image = getImage("wall" + rng + ".png"); break;
+					case 2: image = getImage("downLight.png"); break;
+					// case 3: break;
+					case 4: image = getImage("leftLight.png"); break;
+					// case 5: break;
+					case 6: image = getImage("rightLight.png"); break;
+					case 7: image = getImage("trap.png"); break;
+					case 8: image = getImage("upLight.png"); break;
+					// case 9: break;
+					default: image = null; break;
 				}
 
 				imageView = new ImageView(image);
 				imageView.setX(i * scale);
 				imageView.setY(j * scale);
 				root.getChildren().add(imageView);
-
 			}
 		}
 
@@ -259,17 +226,23 @@ public class Game extends Application {
 		speedView.setY(dungeonMap.getSpeedLocation().y * scale);
 		root.getChildren().add(speedView);
 		
+		/* Adds the key image */
+		keyView = new ImageView(getImage("key.png"));
+		keyView.setX(dungeonMap.getKeyLocation().x * scale);
+		keyView.setY(dungeonMap.getKeyLocation().y * scale);
+		root.getChildren().add(keyView);
+		
 		/* Adds the player image */
 		playerView = new ImageView(getImage("backView.png"));
 		playerView.setX(player.getPlayerLocation().x * scale);
 		playerView.setY(player.getPlayerLocation().y * scale);
 		root.getChildren().add(playerView);
 		
-		/* Adds the key image */
-		keyView = new ImageView(getImage("key.png"));
-		keyView.setX(dungeonMap.getKeyLocation().x * scale);
-		keyView.setY(dungeonMap.getKeyLocation().y * scale);
-		root.getChildren().add(keyView);
+		/* Adds the fireball image */
+		fireView = new ImageView(getImage("fire_front.png"));
+		fireView.setX(fireBall.getFireLocation().x * scale);
+		fireView.setY(fireBall.getFireLocation().y * scale);
+		root.getChildren().add(fireView);
 
 		/* Loops through Background Music */
 		BackgroundMusic.backgroundmusic.loop();
@@ -279,5 +252,16 @@ public class Game extends Application {
 	private int getRandomNumber(int length) {
 		return rand.nextInt(length);
 	}
-
+	
+	/* Gets the correct image regardless of what operating system you are using */
+	private Image getImage(String type) {
+		String file;
+		if (System.getProperty("os.name").startsWith("Windows")) {
+			file = "file:images\\" + type;
+		} else {
+			file = "file:images//" + type;
+		}
+		Image image = new Image(file, 50, 50, true, true);
+		return image;
+	}
 }

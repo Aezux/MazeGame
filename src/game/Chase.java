@@ -91,9 +91,14 @@ public class Chase extends Move {
     /* Finds the best point */
     public Point nextPoint(Point location) {
     	int[][] newMap = findPath();
-    	LinkedList<Point> locations = getAdjacent(location);
+    	
+    	/* Don't move if the player is on top of the enemy */
+    	if (newMap[enemyLocation.x][enemyLocation.y] == 0) {
+    		return enemyLocation;
+    	}
     	
     	Point bestPoint = null;
+    	LinkedList<Point> locations = getAdjacent(location);
     	int lowestDistance = Integer.MAX_VALUE;
     	
     	/* Goes through all the locations to find the best point */
