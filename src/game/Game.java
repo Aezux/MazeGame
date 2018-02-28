@@ -1,5 +1,7 @@
 package game;
 
+import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.Random;
 
 import javafx.application.Application;
@@ -45,6 +47,10 @@ public class Game extends Application {
 	Stage mainStage;
 	Scene Gamescene;
 	Pane root;
+	
+	ArrayList<Trap> traps;
+	ArrayList<ImageView> trapImages;
+//	HashMap<Trap, ImageView> trapImages;
 
 	/* Launches the GUI */
 	public static void main(String[] args) {
@@ -75,6 +81,10 @@ public class Game extends Application {
 
 		dungeonMap = new DungeonMap(dimensions, walls);
 		map = dungeonMap.getMap();
+		
+		this.traps = new ArrayList<Trap>();
+		this.trapImages = new ArrayList<ImageView>();
+		
 		player = new Player(dungeonMap);
 		fireBall = new Fireball(dungeonMap, player);
 
@@ -105,7 +115,7 @@ public class Game extends Application {
 					case RIGHT: player.move("East"); break;
 					default: break;
 				}
-
+				
 				/* Update the player */
 				playerView.setImage(player.newImage());
 				int playerX = player.getPlayerLocation().x;
@@ -119,6 +129,14 @@ public class Game extends Application {
 				int fireY = fireBall.getFireLocation().y;
 				fireView.setX(fireX * scale);
 				fireView.setY(fireY * scale);
+				
+				/* Update the traps */
+				for (int i=0; i<traps.size(); ++i) {
+					Trap trap = traps.get(i);
+					ImageView trapImage = trapImages.get(i);
+					trapImage.setX(trap.getLocation().x * scale);
+					trapImage.setY(trap.getLocation().y * scale);
+				}
 				
 				/*
 				 * Check if playerlocation is same as gem, if so play collectedgem.wav and
@@ -189,7 +207,7 @@ public class Game extends Application {
 					case 4: image = getImage("leftLight.png"); break;
 					// case 5: break;
 					case 6: image = getImage("rightLight.png"); break;
-					case 7: image = getImage("trap.png"); break;
+//					case 7: image = getImage("trap.png"); break;
 					case 8: image = getImage("upLight.png"); break;
 					// case 9: break;
 					default: image = null; break;
@@ -202,6 +220,20 @@ public class Game extends Application {
 			}
 		}
 
+		ArrayList<Point> trapPoints = dungeonMap.getTrapLocations();
+		for (Point location : trapPoints) {
+			
+			Trap trap = new Trap(dungeonMap, player, location);
+			
+			ImageView trapImage = new ImageView(trap.newImage());
+			trapImage.setX(location.x * scale);
+			trapImage.setY(location.y * scale);
+			root.getChildren().add(trapImage);
+			
+			traps.add(trap);
+			trapImages.add(trapImage);
+		}
+		
 		/* Adds the treasure image */
 		treasureView = new ImageView(getImage("chest1.png"));
 		treasureView.setX(dungeonMap.getTreasureLocation().x * scale);

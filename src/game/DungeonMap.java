@@ -22,6 +22,7 @@ public class DungeonMap {
 	
 	private int[][] map;
 	private ArrayList<Integer> openSpots;
+	private ArrayList<Point> trapLocations;
 	private Point playerLocation;
 	private Point fireLocation;
 	private Point treasureLocation;
@@ -43,6 +44,7 @@ public class DungeonMap {
 		this.dimensions = dimensions;
 		this.walls = walls;
 		openSpots = new ArrayList<Integer>();
+		trapLocations = new ArrayList<Point>();
 		buildMap();
 	}
 	
@@ -59,6 +61,10 @@ public class DungeonMap {
 	/* Returns the fireball's location */
 	public Point getFireLocation() {
 		return fireLocation;
+	}
+	
+	public ArrayList<Point> getTrapLocations() {
+		return trapLocations;
 	}
 	
 	/* Updates the player's location */
@@ -122,10 +128,7 @@ public class DungeonMap {
 		/* Generate the traps */
 		for (int i=0; i<traps; ++i) {
 			Point trapSpot = generateLocation();
-			x = trapSpot.x; y = trapSpot.y;
-			Integer pos = x * map.length + y;
-			openSpots.remove(pos);
-			map[x][y] = 7;
+			trapLocations.add(trapSpot);
 		}
 		
 		/* Generate the inner walls */

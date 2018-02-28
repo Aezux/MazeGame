@@ -46,7 +46,7 @@ public class Fireball implements Observer {
 		}
 	}
 
-	/* If the ship moves then move the pirates */
+	/* If the player moves then so does the fireball */
 	public void update(Observable obs, Object arg) {
 		if (obs instanceof Player) {
 			Point move = movement.nextPoint(currentLocation);
