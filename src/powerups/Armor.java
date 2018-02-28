@@ -7,7 +7,7 @@ import game.DungeonMap;
 import javafx.scene.image.Image;
 
 @SuppressWarnings("unused")
-public class Armor extends PowerUps {	
+public class Armor{	
 	private int[][] map;
 	private Point ArmorLocation;
 	private int X, Y;
@@ -22,5 +22,10 @@ public class Armor extends PowerUps {
 	private void updateCoordinates() {
 		this.X = (int) ArmorLocation.getX();
 		this.Y = (int) ArmorLocation.getY();
+	}
+	
+	public void activate()
+	{
+		//REGEN SOME ARMOR OR SOMETHING
 	}
 }

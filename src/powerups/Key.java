@@ -7,7 +7,7 @@ import game.DungeonMap;
 import javafx.scene.image.Image;
 
 @SuppressWarnings("unused")
-public class Key extends PowerUps {	
+public class Key {	
 	private int[][] map;
 	private Point KeyLocation;
 	private int X, Y;
@@ -22,5 +22,10 @@ public class Key extends PowerUps {
 	private void updateCoordinates() {
 		this.X = (int) KeyLocation.getX();
 		this.Y = (int) KeyLocation.getY();
+	}
+	
+	public void activatePower()
+	{
+		//USE KEY ON CHEST
 	}
 }

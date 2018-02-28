@@ -5,7 +5,7 @@ import java.util.Random;
 import game.DungeonMap;
 
 @SuppressWarnings("unused")
-public class Speed extends PowerUps {
+public class Speed {
 	private int[][] map;
 	private Point SpeedLocation;
 	private int X, Y;
@@ -24,4 +24,8 @@ public class Speed extends PowerUps {
 
 	}
 
+	public void activatePower()
+	{
+		//INCREASE SPEED
+	}
 }

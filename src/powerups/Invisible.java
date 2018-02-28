@@ -6,7 +6,7 @@ import game.DungeonMap;
 import game.Player;
 
 @SuppressWarnings("unused")
-public class Invisible extends PowerUps{
+public class Invisible{
 	private Player player;
 	private int[][] map;
 	private Point InvisibleLocation;
@@ -23,4 +23,11 @@ public class Invisible extends PowerUps{
 		this.X = (int) InvisibleLocation.getX();
 		this.Y = (int) InvisibleLocation.getY();
 	}
+	
+
+	public void activatePower()
+	{
+		//MAKE INVISIBLE FOR A WHILE
+	}
+	
 	}
