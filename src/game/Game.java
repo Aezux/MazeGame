@@ -3,6 +3,8 @@ package game;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Random;
+import java.util.Timer;
+import java.util.TimerTask;
 
 import javafx.application.Application;
 import javafx.application.Platform;
@@ -43,6 +45,7 @@ public class Game extends Application {
 	ImageView speedView;
 	ImageView armorView;
 	ImageView keyView;
+	ImageView exitView;
 
 	Stage mainStage;
 	Scene Gamescene;
@@ -131,7 +134,7 @@ public class Game extends Application {
 				fireView.setY(fireY * scale);
 				
 				/* Update the traps */
-				for (int i=0; i<traps.size(); ++i) {
+				for (int i=0; i< traps.size(); ++i) {
 					Trap trap = traps.get(i);
 					ImageView trapImage = trapImages.get(i);
 					trapImage.setX(trap.getLocation().x * scale);
@@ -180,9 +183,23 @@ public class Game extends Application {
 				 * remove key from dungeonMap, sets the KeyLocation to null
 				 */
 				if (player.getPlayerLocation().equals(dungeonMap.getKeyLocation())) {
-					BackgroundMusic.chestopen.play();
+					BackgroundMusic.keycollected.play();
 					keyView.imageProperty().set(null);
-					dungeonMap.setTreasuretoNull();
+					dungeonMap.setKeytoNull();
+					player.setKeytoTrue();
+				}
+				
+				/*
+				 * Check if player has the key and checks if playerLocation is the same as the
+				 * exitLocation. Plays fade to white transition to exit the game back to intro
+				 */
+				if (player.checkifhasKey() == true && player.getPlayerLocation().equals(dungeonMap.getExitLocation())) {
+							exitView.setImage(getImage("door2.png"));
+							exitView.setImage(getImage("door3.png"));
+							exitView.setImage(getImage("door4.png"));
+							exitView.setImage(getImage("door5.png"));
+							exitView.setImage(getImage("door6.png"));
+
 				}
 			}
 		});
@@ -205,7 +222,7 @@ public class Game extends Application {
 					case 2: image = getImage("downLight.png"); break;
 					// case 3: break;
 					case 4: image = getImage("leftLight.png"); break;
-					// case 5: break;
+					case 5: image = getImage("door1.png"); break;
 					case 6: image = getImage("rightLight.png"); break;
 //					case 7: image = getImage("trap.png"); break;
 					case 8: image = getImage("upLight.png"); break;
@@ -278,6 +295,12 @@ public class Game extends Application {
 
 		/* Loops through Background Music */
 		BackgroundMusic.backgroundmusic.loop();
+		
+		/* Adds the door image */
+		exitView = new ImageView(getImage("door1.png"));
+		exitView.setX(dungeonMap.getExitLocation().x * scale);
+		exitView.setY(dungeonMap.getExitLocation().y * scale);
+		root.getChildren().add(exitView);
 	}
 
 	/* Generates a random number */

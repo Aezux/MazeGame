@@ -46,12 +46,24 @@ public class Player extends Observable {
 	
 	/* Checks if there is a wall */
 	private boolean checkWall(int x, int y) {
+		if (map[x][y] == 5) {
+			return !checkifhasKey();
+		}
 		return map[x][y] == 1;
 	}
 	
 	/* Gets the new image of the player */
 	public Image newImage() {
 		return image;
+	}
+	/* Sets hasKey to true */
+	public void setKeytoTrue() {
+		hasKey = true;
+		System.out.println("Picked up Key");
+	}
+	/* Used to check if Player has picked up key */
+	public Boolean checkifhasKey() {
+		return hasKey;
 	}
 	
 	/* Move the player */
