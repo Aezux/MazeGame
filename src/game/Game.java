@@ -37,7 +37,6 @@ public class Game extends Application {
 	DungeonMap dungeonMap;
 
 	ImageView playerView;
-	ImageView fireView;
 	ImageView treasureView;
 	ImageView invisibleView;
 	ImageView speedView;
@@ -50,7 +49,6 @@ public class Game extends Application {
 	
 	ArrayList<Trap> traps;
 	ArrayList<ImageView> trapImages;
-//	HashMap<Trap, ImageView> trapImages;
 
 	/* Launches the GUI */
 	public static void main(String[] args) {
@@ -82,16 +80,25 @@ public class Game extends Application {
 		dungeonMap = new DungeonMap(dimensions, walls);
 		map = dungeonMap.getMap();
 		
-		this.traps = new ArrayList<Trap>();
-		this.trapImages = new ArrayList<ImageView>();
+//		this.traps = new ArrayList<Trap>();
+//		this.trapImages = new ArrayList<ImageView>();
 		
 		player = new Player(dungeonMap);
-		fireBall = new Fireball(dungeonMap, player);
+		fireBall = new Fireball(dungeonMap);
 
 		/*
 		 * Places all the pictures on the pane and allows the user to control the player
 		 */
 		loadMap();
+		ArrayList<Point> trapPoints = dungeonMap.getTrapLocations();
+		for (Point location : trapPoints) {
+			Trap trap = new Trap(dungeonMap, location);
+			trap.addToPane(root.getChildren());
+			trap.startMoving();
+		}
+		
+		fireBall.addToPane(root.getChildren());
+		fireBall.startMoving();
 		movePlayer();
 
 		/* Sets the title and displays the GUI */
@@ -123,27 +130,20 @@ public class Game extends Application {
 				playerView.setX(playerX * scale);
 				playerView.setY(playerY * scale);
 				
-				/* Update the fireball */
-				fireView.setImage(fireBall.newImage());
-				int fireX = fireBall.getFireLocation().x;
-				int fireY = fireBall.getFireLocation().y;
-				fireView.setX(fireX * scale);
-				fireView.setY(fireY * scale);
-				
 				/* Update the traps */
-				for (int i=0; i<traps.size(); ++i) {
-					Trap trap = traps.get(i);
-					ImageView trapImage = trapImages.get(i);
-					trapImage.setX(trap.getLocation().x * scale);
-					trapImage.setY(trap.getLocation().y * scale);
-				}
+//				for (int i=0; i<traps.size(); ++i) {
+//					Trap trap = traps.get(i);
+//					ImageView trapImage = trapImages.get(i);
+//					trapImage.setX(trap.getLocation().x * scale);
+//					trapImage.setY(trap.getLocation().y * scale);
+//				}
 				
 				/*
 				 * Check if playerlocation is same as gem, if so play collectedgem.wav and
 				 * remove gem from dungeonMap, sets the invisibleLocation to null
 				 */
 				if (player.getPlayerLocation().equals(dungeonMap.getInvisibleLocation())) {
-					BackgroundMusic.collectedgem.play();
+//					BackgroundMusic.collectedgem.play();
 					invisibleView.imageProperty().set(null);
 					dungeonMap.setInvisbletoNull();
 				}
@@ -152,7 +152,7 @@ public class Game extends Application {
 				 * remove armor from dungeonMap, sets the ArmorLocation to null
 				 */
 				if (player.getPlayerLocation().equals(dungeonMap.getArmorLocation())) {
-					BackgroundMusic.collectedgem.play();
+//					BackgroundMusic.collectedgem.play();
 					armorView.imageProperty().set(null);
 					dungeonMap.setArmortoNull();
 				}
@@ -161,7 +161,7 @@ public class Game extends Application {
 				 * remove speed from dungeonMap, sets the SpeedLocation to null
 				 */
 				if (player.getPlayerLocation().equals(dungeonMap.getSpeedLocation())) {
-					BackgroundMusic.collectedgem.play();
+//					BackgroundMusic.collectedgem.play();
 					speedView.imageProperty().set(null);
 					dungeonMap.setSpeedtoNull();
 				}
@@ -170,7 +170,7 @@ public class Game extends Application {
 				 * remove treasure from dungeonMap, sets the TreasureLocation to null
 				 */
 				if (player.getPlayerLocation().equals(dungeonMap.getTreasureLocation())) {
-					BackgroundMusic.chestopen.play();
+//					BackgroundMusic.chestopen.play();
 					treasureView.imageProperty().set(null);
 					dungeonMap.setTreasuretoNull();
 				}
@@ -180,7 +180,7 @@ public class Game extends Application {
 				 * remove key from dungeonMap, sets the KeyLocation to null
 				 */
 				if (player.getPlayerLocation().equals(dungeonMap.getKeyLocation())) {
-					BackgroundMusic.chestopen.play();
+//					BackgroundMusic.chestopen.play();
 					keyView.imageProperty().set(null);
 					dungeonMap.setTreasuretoNull();
 				}
@@ -220,20 +220,20 @@ public class Game extends Application {
 			}
 		}
 
-		ArrayList<Point> trapPoints = dungeonMap.getTrapLocations();
-		for (Point location : trapPoints) {
-			
-			Trap trap = new Trap(dungeonMap, player, location);
-			
-			ImageView trapImage = new ImageView(trap.newImage());
-			trapImage.setX(location.x * scale);
-			trapImage.setY(location.y * scale);
-			root.getChildren().add(trapImage);
-			
-			traps.add(trap);
-			trapImages.add(trapImage);
-		}
-		
+//		ArrayList<Point> trapPoints = dungeonMap.getTrapLocations();
+//		for (Point location : trapPoints) {
+//			
+//			Trap trap = new Trap(dungeonMap, player, location);
+//			
+//			ImageView trapImage = new ImageView(trap.newImage());
+//			trapImage.setX(location.x * scale);
+//			trapImage.setY(location.y * scale);
+//			root.getChildren().add(trapImage);
+//			
+//			traps.add(trap);
+//			trapImages.add(trapImage);
+//		}
+//		
 		/* Adds the treasure image */
 		treasureView = new ImageView(getImage("chest1.png"));
 		treasureView.setX(dungeonMap.getTreasureLocation().x * scale);
@@ -269,15 +269,9 @@ public class Game extends Application {
 		playerView.setX(player.getPlayerLocation().x * scale);
 		playerView.setY(player.getPlayerLocation().y * scale);
 		root.getChildren().add(playerView);
-		
-		/* Adds the fireball image */
-		fireView = new ImageView(getImage("fire_front.png"));
-		fireView.setX(fireBall.getFireLocation().x * scale);
-		fireView.setY(fireBall.getFireLocation().y * scale);
-		root.getChildren().add(fireView);
 
 		/* Loops through Background Music */
-		BackgroundMusic.backgroundmusic.loop();
+//		BackgroundMusic.backgroundmusic.loop();
 	}
 
 	/* Generates a random number */

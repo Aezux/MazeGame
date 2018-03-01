@@ -1,6 +1,7 @@
 package game;
 
 import java.awt.Point;
+import java.util.ArrayList;
 
 public class Move implements Movement {
 
@@ -19,8 +20,15 @@ public class Move implements Movement {
         return (checkBounds(x, y, map.length) && !checkWall(x, y, map));
     }
 
-    /* Will get overwritten in other classes that extend this class */
-    public Point nextPoint(Point location) {
+    /* These next two will get overwritten in other classes that extend this class */
+    
+    /* Gets the next point to go to */
+    public Point nextPoint(Point currentLocation) {
 		return null;
 	}
+    
+    /* Gets a path of points to follow */
+    public ArrayList<Point> getPath(Point currentLocation) {
+    	return null;
+    }
 }

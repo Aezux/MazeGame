@@ -1,26 +1,31 @@
 package game;
 
 import java.awt.Point;
+import java.util.ArrayList;
 import java.util.Random;
 
 public class Arbitrary extends Move {
 
-	int[][] map;
+	private DungeonMap map;
+	private int[][] map2d;
 	Random rand = new Random();
 
     /* Constructor */
-    public Arbitrary(DungeonMap map) {
-         this.map = map.getMap();
+    public Arbitrary(DungeonMap map, Point enemy) {
+         this.map = map;
+         this.map2d = map.getMap();
     }
     
     /* Generates a random point that is open on the map*/
 	public Point nextPoint(Point location) {
-		int x, y;
-		
+		int openSpot, x, y;
 		do {
-			x = getRandomNumber(map.length * map.length);
-			y = getRandomNumber(map.length * map.length);
-		} while (!openSpot(x, y, map));
+			ArrayList<Integer> positions = map.getOpenLocations();
+			openSpot = getRandomNumber(positions.size());			
+			Integer position = positions.get(openSpot);
+			x = position / map2d.length;
+			y = position - (x * map2d.length);
+		} while (!openSpot(x, y, map2d));
 		
 		return new Point(x, y);
 	}
