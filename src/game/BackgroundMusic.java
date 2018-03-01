@@ -12,7 +12,6 @@ public class BackgroundMusic {
     public static BackgroundMusic backgroundmusic = getFile("backgroundmusic.wav");
     public static BackgroundMusic collectedgem = getFile("collectedgem.wav");
     public static BackgroundMusic chestopen = getFile("chestopen.wav");
-    public static BackgroundMusic keycollected = getFile("chestopen.wav");
     
     /* Constructor */
     public BackgroundMusic (String fileName) {

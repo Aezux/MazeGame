@@ -1,21 +1,29 @@
 package game;
 
 import java.awt.Point;
-import java.util.Observable;
-import java.util.Observer;
+import javafx.scene.Node;
+import javafx.collections.ObservableList;
 import javafx.scene.image.Image;
+import javafx.scene.image.ImageView;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
 
-public class Fireball implements Observer {
+/* The fireball class */
+public class Fireball {
 
+	private ExecutorService threads;
 	private Point currentLocation;
 	private Movement movement;
 	private Image image;
+	private ImageView fireImage;
+	private int scale = 50;
 	
 	/* Constructor */
-	public Fireball(DungeonMap map, Observable player) {
-		player.addObserver(this);
+	public Fireball(DungeonMap map) {
 		this.currentLocation = map.getFireLocation();
 		this.movement = new Chase(map, currentLocation);
+		this.threads = Executors.newFixedThreadPool(1);
+		setImage();
 	}
 	
 	/* Sets the movement */
@@ -23,14 +31,39 @@ public class Fireball implements Observer {
 		this.movement = movement;
 	}
 	
-	/* Returns the ship's location */
-	public Point getFireLocation() {
-		return currentLocation;
+	/* Starting position for the fireball */
+	private void setImage() {
+		image = getImage("fire_front.png");
+		fireImage = new ImageView(image);
+		fireImage.setX(currentLocation.x * scale);
+		fireImage.setY(currentLocation.y * scale);
 	}
 	
-	/* Gets the new image of the fireball */
-	public Image newImage() {
-		return image;
+	/* Adds the fireball to the pane */
+	public void addToPane(ObservableList<Node> sceneGraph) {
+		sceneGraph.add(fireImage);
+	}
+	
+	/* Launches the fireball tread */
+	public void startMoving() {
+		threads.submit(() -> update());
+	}
+	
+	/* Updates the movement */
+	private void update() {
+		while (true) {
+			
+			try { // Put the thread to sleep
+				Thread.sleep(100);
+			} catch (InterruptedException e) {}
+			
+			/* Moves around */
+			Point move = movement.nextPoint(currentLocation);
+			updateImage(currentLocation.x, move.x, currentLocation.y, move.y);
+			currentLocation.setLocation(move.x, move.y);
+			fireImage.setX(move.x * scale);
+			fireImage.setY(move.y * scale);
+		}
 	}
 	
 	/* Updates the fireball image */
@@ -44,15 +77,7 @@ public class Fireball implements Observer {
 		} else if (newY < oldY) {
 			image = getImage("fire_back.png");
 		}
-	}
-
-	/* If the player moves then so does the fireball */
-	public void update(Observable obs, Object arg) {
-		if (obs instanceof Player) {
-			Point move = movement.nextPoint(currentLocation);
-			updateImage(currentLocation.x, move.x, currentLocation.y, move.y);
-			currentLocation.setLocation(move.x, move.y);
-		}
+		fireImage.setImage(image);
 	}
 	
 	/* Gets the correct image regardless of what operating system you are using */
