@@ -63,6 +63,7 @@ public class DungeonMap {
 		return fireLocation;
 	}
 	
+	/* Returns the trap locations */
 	public ArrayList<Point> getTrapLocations() {
 		return trapLocations;
 	}
@@ -72,10 +73,15 @@ public class DungeonMap {
 		this.playerLocation = playerLocation;
 	}
 	
+	public ArrayList<Integer> getOpenLocations() {
+		return openSpots;
+	}
+	
 	/* Returns the treasure's location */
 	public Point getTreasureLocation() {
 		return treasureLocation;
 	}
+	
 	/* Sets the treasure's location to null after picked up */
 	public void setTreasuretoNull() {
 		treasureLocation = null;
@@ -85,32 +91,40 @@ public class DungeonMap {
 	public Point getArmorLocation() {
 		return armorLocation;
 	}
+	
 	/* Sets the armor's location to null after picked up */
 	public void setArmortoNull() {
 		armorLocation = null;
 	}
+	
 	/* Returns the invisible's Location */
 	public Point getInvisibleLocation() {
 		return invisibleLocation;
 	}
+	
 	/* Sets the invisible location to null after picked up */
 	public void setInvisbletoNull() {
 		invisibleLocation = null;
 	}
+	
 	/* Returns the speed's Location */
 	public Point getSpeedLocation() {
 		return speedLocation;
 	}
+	
 	/* Sets the speed's location to null after picked up */
 	public void setSpeedtoNull() {
 		speedLocation = null;
 	}
+	
 	public Point getKeyLocation() {
 		return keyLocation;
 	}
+	
 	public void setKeytoNull() {
 		keyLocation = null;
 	}
+	
 	/* Returns a Point where there is an empty spot */
 	private Point generateLocation() {
 		int N = getRandomNumber(openSpots.size());
@@ -123,8 +137,6 @@ public class DungeonMap {
 	
 	/* Sets all trap and wall locations */
 	private void setLocations() {
-		int x, y;
-
 		/* Generate the traps */
 		for (int i=0; i<traps; ++i) {
 			Point trapSpot = generateLocation();
@@ -134,10 +146,7 @@ public class DungeonMap {
 		/* Generate the inner walls */
 		for (int i=0; i<walls; ++i) {
 			Point wallSpot = generateLocation();
-			x = wallSpot.x; y = wallSpot.y;
-			Integer pos = x * map.length + y;
-			openSpots.remove(pos);
-			map[x][y] = 1;
+			map[wallSpot.x][wallSpot.y] = 1;
 		}
 	}
 	
@@ -150,47 +159,18 @@ public class DungeonMap {
 		invisibleLocation = generateLocation();
 		speedLocation = generateLocation();
 		keyLocation = generateLocation();
-		
 	} 
 	
 	/* Builds all the exits on the map */
 	private void buildExits() {
-		ArrayList<Integer> exitPath = new ArrayList<Integer>();
 		int size = dimensions-1;
 		int half = size/2;
 		
-		/* Top */
+		/* Builds all the doorways */
 		map[half][0] = 8;
-		
-		/* Bottom */
 		map[half][size] = 2;
-
-		/* Left */
 		map[0][half] = 4;
-
-		/* Right */
-		map[size][half] = 6;		
-		
-		/* Clears the path around the exits */
-		exitPath.add(new Integer(22));
-		exitPath.add(new Integer(23));
-		exitPath.add(new Integer(24));
-		
-		exitPath.add(new Integer(201));
-		exitPath.add(new Integer(202));
-		exitPath.add(new Integer(203));
-		
-		exitPath.add(new Integer(91));
-		exitPath.add(new Integer(106));
-		exitPath.add(new Integer(121));
-		
-		exitPath.add(new Integer(104));
-		exitPath.add(new Integer(119));
-		exitPath.add(new Integer(134));
-		
-		for (Integer path : exitPath) {
-			openSpots.remove(path);
-		}
+		map[size][half] = 6;
 	}
 	
 	/* Creates the map */
@@ -198,22 +178,19 @@ public class DungeonMap {
 		for (int i=0; i<map.length; ++i) {
 			for (int j=0; j<map.length; ++j) {
 
-				/* Top */
-				if (j == 0) {
+				/* Makes all the sides walls */
+				if (j == 0 || (i == 0 || i == map.length-1) || (j == map.length-1)) {
 					map[i][j] = 1;
 				}
 				
-				/* Sides */
-				else if (i == 0 || i == map.length - 1) {
-					map[i][j] = 1;
+				/* Makes sure the outer area isn't covered */
+				else if ((j == 1 && (i != 0 && i != map.length-1)) ||
+						((i == 1 || i == map.length-2) && j != map.length-1) ||
+						(j == map.length-2 && (i != 0 && i != map.length-1))) {
+					map[i][j] = 0;
 				}
 				
-				/* Bottom */
-				else if (j == map.length - 1) {
-					map[i][j] = 1;
-				}
-				
-				else {
+				else { /* Makes the rest of the spots open */
 					map[i][j] = 0;
 					Integer pos = i * map.length + j;
 					openSpots.add(pos);
