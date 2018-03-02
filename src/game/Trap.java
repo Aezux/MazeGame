@@ -16,12 +16,14 @@ public class Trap {
 	private Movement movement;
 	private Image image;
 	private ImageView trapImage;
+	private boolean gameShouldRun;
 	private int scale = 50;
 	
 	public Trap(DungeonMap map, Point currentLocation) {
 		this.currentLocation = currentLocation;
 		this.movement = new Arbitrary(map, currentLocation);
 		this.threads = Executors.newFixedThreadPool(1);
+		this.gameShouldRun = true;
 		setImage();
 	}
 	
@@ -53,9 +55,15 @@ public class Trap {
 		threads.submit(() -> update());
 	}
 	
+	/* Stops the thread */
+	public void stopMoving() {
+		gameShouldRun = false;
+		threads.shutdownNow();
+	}
+	
 	/* Updates the movement */
 	private void update() {
-		while (true) {
+		while (gameShouldRun) {
 			
 			try { // Put the thread to sleep
 				Thread.sleep(5000);

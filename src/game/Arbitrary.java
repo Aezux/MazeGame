@@ -2,13 +2,11 @@ package game;
 
 import java.awt.Point;
 import java.util.ArrayList;
-import java.util.Random;
 
 public class Arbitrary extends Move {
 
 	private DungeonMap map;
 	private int[][] map2d;
-	Random rand = new Random();
 
     /* Constructor */
     public Arbitrary(DungeonMap map, Point enemy) {
@@ -28,10 +26,5 @@ public class Arbitrary extends Move {
 		} while (!openSpot(x, y, map2d));
 		
 		return new Point(x, y);
-	}
-	
-	/* Generates a random number */
-	private int getRandomNumber(int length) {
-		return rand.nextInt(length);
 	}
 }

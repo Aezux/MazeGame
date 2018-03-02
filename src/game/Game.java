@@ -29,7 +29,7 @@ public class Game extends Application {
 
 	int[][] map;
 	final int dimensions = 15;
-	final int walls = 15;
+	final int walls = 40;
 	final int scale = 50;
 
 	Player player;
@@ -48,11 +48,11 @@ public class Game extends Application {
 	Pane root;
 	
 	ArrayList<Trap> traps;
-	ArrayList<ImageView> trapImages;
 
 	/* Launches the GUI */
 	public static void main(String[] args) {
 		launch(args);
+		System.exit(0);
 	}
 
 	/* Starts the whole program with the input scene */
@@ -80,8 +80,7 @@ public class Game extends Application {
 		dungeonMap = new DungeonMap(dimensions, walls);
 		map = dungeonMap.getMap();
 		
-//		this.traps = new ArrayList<Trap>();
-//		this.trapImages = new ArrayList<ImageView>();
+		this.traps = new ArrayList<Trap>();
 		
 		player = new Player(dungeonMap);
 		fireBall = new Fireball(dungeonMap);
@@ -90,22 +89,29 @@ public class Game extends Application {
 		 * Places all the pictures on the pane and allows the user to control the player
 		 */
 		loadMap();
+		
+		
 		ArrayList<Point> trapPoints = dungeonMap.getTrapLocations();
 		for (Point location : trapPoints) {
 			Trap trap = new Trap(dungeonMap, location);
 			trap.addToPane(root.getChildren());
+			traps.add(trap);
 			trap.startMoving();
 		}
 		
 		fireBall.addToPane(root.getChildren());
 		fireBall.startMoving();
+		
 		movePlayer();
-
+//		fireBall.stopMoving();
+//		for (Trap trap : traps) {
+//			trap.stopMoving();
+//		}
+		
 		/* Sets the title and displays the GUI */
 		mainStage.setTitle("Maze Game");
 		mainStage.setScene(Gamescene);
 		mainStage.show();
-
 	}
 
 	/* The player controls the knight with the keyboard */
@@ -130,20 +136,12 @@ public class Game extends Application {
 				playerView.setX(playerX * scale);
 				playerView.setY(playerY * scale);
 				
-				/* Update the traps */
-//				for (int i=0; i<traps.size(); ++i) {
-//					Trap trap = traps.get(i);
-//					ImageView trapImage = trapImages.get(i);
-//					trapImage.setX(trap.getLocation().x * scale);
-//					trapImage.setY(trap.getLocation().y * scale);
-//				}
-				
 				/*
 				 * Check if playerlocation is same as gem, if so play collectedgem.wav and
 				 * remove gem from dungeonMap, sets the invisibleLocation to null
 				 */
 				if (player.getPlayerLocation().equals(dungeonMap.getInvisibleLocation())) {
-//					BackgroundMusic.collectedgem.play();
+					BackgroundMusic.collectedgem.play();
 					invisibleView.imageProperty().set(null);
 					dungeonMap.setInvisbletoNull();
 				}
@@ -152,7 +150,7 @@ public class Game extends Application {
 				 * remove armor from dungeonMap, sets the ArmorLocation to null
 				 */
 				if (player.getPlayerLocation().equals(dungeonMap.getArmorLocation())) {
-//					BackgroundMusic.collectedgem.play();
+					BackgroundMusic.collectedgem.play();
 					armorView.imageProperty().set(null);
 					dungeonMap.setArmortoNull();
 				}
@@ -161,7 +159,7 @@ public class Game extends Application {
 				 * remove speed from dungeonMap, sets the SpeedLocation to null
 				 */
 				if (player.getPlayerLocation().equals(dungeonMap.getSpeedLocation())) {
-//					BackgroundMusic.collectedgem.play();
+					BackgroundMusic.collectedgem.play();
 					speedView.imageProperty().set(null);
 					dungeonMap.setSpeedtoNull();
 				}
@@ -170,7 +168,7 @@ public class Game extends Application {
 				 * remove treasure from dungeonMap, sets the TreasureLocation to null
 				 */
 				if (player.getPlayerLocation().equals(dungeonMap.getTreasureLocation())) {
-//					BackgroundMusic.chestopen.play();
+					BackgroundMusic.chestopen.play();
 					treasureView.imageProperty().set(null);
 					dungeonMap.setTreasuretoNull();
 				}
@@ -180,7 +178,7 @@ public class Game extends Application {
 				 * remove key from dungeonMap, sets the KeyLocation to null
 				 */
 				if (player.getPlayerLocation().equals(dungeonMap.getKeyLocation())) {
-//					BackgroundMusic.chestopen.play();
+					BackgroundMusic.chestopen.play();
 					keyView.imageProperty().set(null);
 					dungeonMap.setTreasuretoNull();
 				}
@@ -203,13 +201,10 @@ public class Game extends Application {
 					case 0: image = getImage("floor" + rng + ".png"); break;
 					case 1: image = getImage("wall" + rng + ".png"); break;
 					case 2: image = getImage("downLight.png"); break;
-					// case 3: break;
 					case 4: image = getImage("leftLight.png"); break;
 					// case 5: break;
 					case 6: image = getImage("rightLight.png"); break;
-//					case 7: image = getImage("trap.png"); break;
 					case 8: image = getImage("upLight.png"); break;
-					// case 9: break;
 					default: image = null; break;
 				}
 
@@ -219,21 +214,7 @@ public class Game extends Application {
 				root.getChildren().add(imageView);
 			}
 		}
-
-//		ArrayList<Point> trapPoints = dungeonMap.getTrapLocations();
-//		for (Point location : trapPoints) {
-//			
-//			Trap trap = new Trap(dungeonMap, player, location);
-//			
-//			ImageView trapImage = new ImageView(trap.newImage());
-//			trapImage.setX(location.x * scale);
-//			trapImage.setY(location.y * scale);
-//			root.getChildren().add(trapImage);
-//			
-//			traps.add(trap);
-//			trapImages.add(trapImage);
-//		}
-//		
+		
 		/* Adds the treasure image */
 		treasureView = new ImageView(getImage("chest1.png"));
 		treasureView.setX(dungeonMap.getTreasureLocation().x * scale);
@@ -271,7 +252,7 @@ public class Game extends Application {
 		root.getChildren().add(playerView);
 
 		/* Loops through Background Music */
-//		BackgroundMusic.backgroundmusic.loop();
+		BackgroundMusic.backgroundmusic.loop();
 	}
 
 	/* Generates a random number */

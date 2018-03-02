@@ -1,31 +1,26 @@
 package game;
-import java.awt.Point;
-import java.util.Observable;
 
+import java.awt.Point;
 import javafx.scene.image.Image;
  
 @SuppressWarnings("unused")
-public class Player extends Observable {
+public class Player {
 
 	private int[][] map;
 	private DungeonMap dungeon;
 	private Point currentLocation;
 	private boolean hasKey = false;
+	private int lives;
 	private Image image;
 	private int X, Y;
 	
 	/* Constructor */
 	public Player(DungeonMap map) {
+		this.lives = 1;
 		this.dungeon = map;
 		this.map = map.getMap();
 		this.currentLocation = map.getPlayerLocation();
 		updateCoordinates();
-	}
-	
-	/* Updates the Observers that the player moved */
-	public void playerMoved() {
-		setChanged();
-		notifyObservers();
 	}
 	
 	/* Updates the variables X and Y */
@@ -37,6 +32,19 @@ public class Player extends Observable {
 	/* Returns the player's location */
 	public Point getPlayerLocation() {
 		return currentLocation;
+	}
+	
+	/* Gives the player an extra life */
+	public void addLife() {
+		++lives;
+	}
+	
+	/* Takes away a life from the player */
+	public void loseLife() {
+		--lives;
+		if (lives <= 0) {
+			System.out.println("You Lose!");
+		}
 	}
 	
 	/* Checks if the player is in bounds */
@@ -67,7 +75,6 @@ public class Player extends Observable {
 		if (checkBounds(X, Y, map.length) && !checkWall(X, Y)) {
 			currentLocation.setLocation(X, Y);
 			dungeon.setPlayerLocation(currentLocation);
-			playerMoved();
 		}
 	}
 

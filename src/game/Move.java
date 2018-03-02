@@ -2,8 +2,16 @@ package game;
 
 import java.awt.Point;
 import java.util.ArrayList;
+import java.util.Random;
 
 public class Move implements Movement {
+	
+	Random rand = new Random();
+	
+	/* Generates a random number */
+	protected int getRandomNumber(int length) {
+		return rand.nextInt(length);
+	}
 
     /* Checks if the player is in bounds */
     private boolean checkBounds(int x, int y, int size) {

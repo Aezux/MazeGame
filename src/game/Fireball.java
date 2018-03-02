@@ -11,18 +11,23 @@ import java.util.concurrent.Executors;
 /* The fireball class */
 public class Fireball {
 
+	private DungeonMap map;
 	private ExecutorService threads;
 	private Point currentLocation;
 	private Movement movement;
 	private Image image;
 	private ImageView fireImage;
+	private boolean gameShouldRun;
 	private int scale = 50;
 	
 	/* Constructor */
 	public Fireball(DungeonMap map) {
 		this.currentLocation = map.getFireLocation();
-		this.movement = new Chase(map, currentLocation);
+		this.map = map;
+//		this.movement = new Chase(map, currentLocation);
+		this.movement = new Patrol(map, currentLocation);
 		this.threads = Executors.newFixedThreadPool(1);
+		this.gameShouldRun = true;
 		setImage();
 	}
 	
@@ -49,12 +54,19 @@ public class Fireball {
 		threads.submit(() -> update());
 	}
 	
+	/* Stops the thread */
+	public void stopMoving() {
+		gameShouldRun = false;
+		threads.shutdownNow();
+	}
+	
 	/* Updates the movement */
 	private void update() {
-		while (true) {
+		int sleepTime = 175;
+		while (gameShouldRun) {
 			
 			try { // Put the thread to sleep
-				Thread.sleep(100);
+				Thread.sleep(sleepTime);
 			} catch (InterruptedException e) {}
 			
 			/* Moves around */
