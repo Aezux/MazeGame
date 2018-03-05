@@ -33,7 +33,8 @@ public class Game extends Application {
 	final int scale = 50;
 
 	Player player;
-	Fireball fireBall;
+	Enemy fireBall;
+	Enemy fireBall2;
 	DungeonMap dungeonMap;
 
 	ImageView playerView;
@@ -47,7 +48,7 @@ public class Game extends Application {
 	Scene Gamescene;
 	Pane root;
 	
-	ArrayList<Trap> traps;
+	ArrayList<Enemy> traps;
 
 	/* Launches the GUI */
 	public static void main(String[] args) {
@@ -80,10 +81,14 @@ public class Game extends Application {
 		dungeonMap = new DungeonMap(dimensions, walls);
 		map = dungeonMap.getMap();
 		
-		this.traps = new ArrayList<Trap>();
+		this.traps = new ArrayList<Enemy>();
 		
 		player = new Player(dungeonMap);
-		fireBall = new Fireball(dungeonMap);
+		EnemyFactory enemyFactory = new EnemyFactory();
+		fireBall = enemyFactory.getEnemy("FIRE", dungeonMap, null);
+		fireBall2 = enemyFactory.getEnemy("Fire", dungeonMap, null);
+		//fireBall = new Fireball(dungeonMap);
+		
 
 		/*
 		 * Places all the pictures on the pane and allows the user to control the player
@@ -93,7 +98,8 @@ public class Game extends Application {
 		
 		ArrayList<Point> trapPoints = dungeonMap.getTrapLocations();
 		for (Point location : trapPoints) {
-			Trap trap = new Trap(dungeonMap, location);
+			Enemy trap = enemyFactory.getEnemy("TRAP", dungeonMap, location);
+			//Trap trap = new Trap(dungeonMap, location);
 			trap.addToPane(root.getChildren());
 			traps.add(trap);
 			trap.startMoving();

@@ -1,6 +1,7 @@
 package game;
 
 import java.awt.Point;
+import java.util.Observable;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 import javafx.collections.ObservableList;
@@ -9,7 +10,7 @@ import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 
 /* The trap class */
-public class Trap {
+public class Trap extends Enemy{
 	
 	private ExecutorService threads;
 	private Point currentLocation;
@@ -112,5 +113,11 @@ public class Trap {
 		}
 		Image image = new Image(file, 50, 50, true, true);
 		return image;
+	}
+
+	@Override
+	public void update(Observable o, Object arg) {
+		// TODO Auto-generated method stub
+		
 	}
 }

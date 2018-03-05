@@ -5,11 +5,13 @@ import javafx.scene.Node;
 import javafx.collections.ObservableList;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
+
+import java.util.Observable;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 
 /* The fireball class */
-public class Fireball {
+public class Fireball extends Enemy{
 
 	private DungeonMap map;
 	private ExecutorService threads;
@@ -61,6 +63,7 @@ public class Fireball {
 	}
 	
 	/* Updates the movement */
+	
 	private void update() {
 		int sleepTime = 175;
 		while (gameShouldRun) {
@@ -102,5 +105,11 @@ public class Fireball {
 		}
 		Image image = new Image(file, 50, 50, true, true);
 		return image;
+	}
+
+	@Override
+	public void update(Observable arg0, Object arg1) {
+		 //TODO Auto-generated method stub
+		
 	}
 }
