@@ -12,6 +12,7 @@ public class Invisible{
 	private Point InvisibleLocation;
 	private int X, Y;
 	private Random rand = new Random();
+	private int uses = 3;
 	
 	public Invisible(DungeonMap map) {
 		this.map = map.getMap();
@@ -27,7 +28,18 @@ public class Invisible{
 
 	public void activatePower()
 	{
-		//MAKE INVISIBLE FOR A WHILE
+		if(uses > 0)
+		{
+			//MAKE INVISIBLE FOR A WHILE
+			
+			
+			uses--;
+			System.out.println("Using Invisible, " + uses + " uses remaining.");
+		}
+		else
+		{
+			System.out.println("No uses remaining.");
+		}
 	}
 	
 	}

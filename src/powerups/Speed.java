@@ -10,6 +10,7 @@ public class Speed {
 	private Point SpeedLocation;
 	private int X, Y;
 	private Random rand = new Random();
+	private int uses = 3;
 
 	public Speed(DungeonMap map) {
 		this.map = map.getMap();
@@ -26,6 +27,17 @@ public class Speed {
 
 	public void activatePower()
 	{
-		//INCREASE SPEED
+		if(uses > 0)
+		{
+			//INCREASE SPEED
+			
+			
+			uses--;
+			System.out.println("Using Speed, " + uses + " uses remaining.");
+		}
+		else
+		{
+			System.out.println("No uses remaining.");
+		}
 	}
 }

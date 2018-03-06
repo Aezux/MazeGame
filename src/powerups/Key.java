@@ -12,6 +12,7 @@ public class Key {
 	private Point KeyLocation;
 	private int X, Y;
 	private Random rand = new Random();
+	private int uses = 1;
 	
 	public Key(DungeonMap map) {
 		this.map = map.getMap();
@@ -26,6 +27,17 @@ public class Key {
 	
 	public void activatePower()
 	{
-		//USE KEY ON CHEST
+		if(uses > 0)
+		{
+			//USE KEY ON CHEST
+			
+			
+			uses--;
+			System.out.println("Using Key, " + uses + " uses remaining.");
+		}
+		else
+		{
+			System.out.println("No uses remaining.");
+		}
 	}
 }

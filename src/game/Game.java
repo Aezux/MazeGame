@@ -36,6 +36,8 @@ public class Game extends Application {
 	Enemy fireBall;
 	Enemy fireBall2;
 	DungeonMap dungeonMap;
+	
+	Toolbar toolbar;
 
 	ImageView playerView;
 	ImageView treasureView;
@@ -81,6 +83,14 @@ public class Game extends Application {
 		dungeonMap = new DungeonMap(dimensions, walls);
 		map = dungeonMap.getMap();
 		
+
+		//set toolbar and its slots
+		toolbar = new Toolbar();
+		toolbar.setPower(1, new ArmorActivate(new Armor(dungeonMap)));
+		toolbar.setPower(2, new InvisibleActivate(new Invisible(dungeonMap)));
+		toolbar.setPower(3, new KeyActivate(new Key(dungeonMap)));
+		toolbar.setPower(4, new SpeedActivate(new Speed(dungeonMap)));
+		
 		this.traps = new ArrayList<Enemy>();
 		
 		player = new Player(dungeonMap);
@@ -109,6 +119,7 @@ public class Game extends Application {
 		fireBall.startMoving();
 		
 		movePlayer();
+//		useToolbar();
 //		fireBall.stopMoving();
 //		for (Trap trap : traps) {
 //			trap.stopMoving();
@@ -119,6 +130,25 @@ public class Game extends Application {
 		mainStage.setScene(Gamescene);
 		mainStage.show();
 	}
+	
+//	//The key bindings for all of the toolbar items.
+//	public void useToolbar()
+//	{
+//		Gamescene.setOnKeyPressed(new EventHandler<KeyEvent>() {
+//			public void handle(KeyEvent event) {
+//
+//				/* Moves the ship using the keyboard */
+//				switch (event.getCode()) {
+//					//keep parameter same as digit key, handled offset in Toolbar
+//					case DIGIT1: toolbar.useSlot(1); break;
+//					case DIGIT2: toolbar.useSlot(2); break;
+//					case DIGIT3: toolbar.useSlot(3); break;
+//					case DIGIT4: toolbar.useSlot(4); break;
+//					default: break;
+//				}
+//			}
+//		});
+//	}
 
 	/* The player controls the knight with the keyboard */
 	public void movePlayer() {
@@ -132,6 +162,12 @@ public class Game extends Application {
 					case DOWN: player.move("South"); break;
 					case LEFT: player.move("West"); break;
 					case RIGHT: player.move("East"); break;
+					//Toolbar keybinds here
+					//keep parameter same as digit key, handled offset in Toolbar
+					case DIGIT1: toolbar.useSlot(1); break;
+					case DIGIT2: toolbar.useSlot(2); break;
+					case DIGIT3: toolbar.useSlot(3); break;
+					case DIGIT4: toolbar.useSlot(4); break;
 					default: break;
 				}
 				

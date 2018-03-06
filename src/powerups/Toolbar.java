@@ -21,12 +21,12 @@ public class Toolbar {
 	//USE THIS WHEN PICKING UP A POWERUP TO ASSIGN TO TOOLBAR
 	public void setPower(int slot, PowerUps power)
 	{
-		powers[slot] = power;
+		powers[slot-1] = power;
 	}
 	
 	//HERE USE THIS METHOD WHEN USING A POWERUP SLOT
 	public void useSlot(int slot)
 	{
-		powers[slot].execute();
+		powers[slot-1].execute();
 	}
 }

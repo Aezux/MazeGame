@@ -12,6 +12,7 @@ public class Armor{
 	private Point ArmorLocation;
 	private int X, Y;
 	private Random rand = new Random();
+	private int uses = 3;
 	
 	public Armor(DungeonMap map) {
 		this.map = map.getMap();
@@ -26,6 +27,17 @@ public class Armor{
 	
 	public void activate()
 	{
-		//REGEN SOME ARMOR OR SOMETHING
+		if(uses > 0)
+		{
+			//REGEN SOME ARMOR OR SOMETHING
+			
+			
+			uses--;
+			System.out.println("Using Armor, " + uses + " uses remaining.");
+		}
+		else
+		{
+			System.out.println("No uses remaining.");
+		}
 	}
 }
