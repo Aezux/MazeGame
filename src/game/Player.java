@@ -13,6 +13,8 @@ public class Player {
 	private int lives;
 	private Image image;
 	private int X, Y;
+	private boolean atChest = false;
+	private boolean openChest = false;
 	
 	/* Constructor */
 	public Player(DungeonMap map) {
@@ -46,6 +48,47 @@ public class Player {
 			System.out.println("You Lose!");
 		}
 	}
+	public void openChest()
+	{
+		openChest = true;
+	}
+	
+	public boolean hasOpenedChest()
+	{
+		return openChest;
+	}
+	
+	public void addKey()
+	{
+		this.hasKey = true;
+	}
+	
+	public void removeKey()
+	{
+		this.hasKey = false;
+	}
+	
+	public boolean hasKey()
+	{
+		return this.hasKey;
+	}
+	
+	public void setAtChest()
+	{
+		this.atChest = true;
+	}
+	
+	public void setAwayChest()
+	{
+		this.atChest = false;
+	}
+	
+	public boolean atChest()
+	{
+		return this.atChest;
+	}
+	
+	
 	
 	/* Checks if the player is in bounds */
 	private boolean checkBounds(int x, int y, int size) {

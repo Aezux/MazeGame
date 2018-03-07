@@ -88,10 +88,10 @@ public class Game extends Application {
 
 		//set toolbar and its slots
 		toolbar = new Toolbar();
-		toolbar.setPower(1, new ArmorActivate(new Armor(dungeonMap)));
-		toolbar.setPower(2, new InvisibleActivate(new Invisible(dungeonMap)));
-		toolbar.setPower(3, new KeyActivate(new Key(dungeonMap)));
-		toolbar.setPower(4, new SpeedActivate(new Speed(dungeonMap)));
+//		toolbar.setPower(1, new ArmorActivate(new Armor(dungeonMap)));
+//		toolbar.setPower(2, new InvisibleActivate(new Invisible(dungeonMap)));
+//		toolbar.setPower(3, new KeyActivate(new Key(dungeonMap)));
+//		toolbar.setPower(4, new SpeedActivate(new Speed(dungeonMap)));
 		
 		player = new Player(dungeonMap);
 		
@@ -124,7 +124,6 @@ public class Game extends Application {
 		zombie.startMoving();
 		
 		movePlayer();
-//		useToolbar();
 //		fireBall.stopMoving();
 //		for (Trap trap : traps) {
 //			trap.stopMoving();
@@ -136,24 +135,6 @@ public class Game extends Application {
 		mainStage.show();
 	}
 	
-//	//The key bindings for all of the toolbar items.
-//	public void useToolbar()
-//	{
-//		Gamescene.setOnKeyPressed(new EventHandler<KeyEvent>() {
-//			public void handle(KeyEvent event) {
-//
-//				/* Moves the ship using the keyboard */
-//				switch (event.getCode()) {
-//					//keep parameter same as digit key, handled offset in Toolbar
-//					case DIGIT1: toolbar.useSlot(1); break;
-//					case DIGIT2: toolbar.useSlot(2); break;
-//					case DIGIT3: toolbar.useSlot(3); break;
-//					case DIGIT4: toolbar.useSlot(4); break;
-//					default: break;
-//				}
-//			}
-//		});
-//	}
 
 	/* The player controls the knight with the keyboard */
 	public void movePlayer() {
@@ -191,6 +172,7 @@ public class Game extends Application {
 					BackgroundMusic.collectedgem.play();
 					invisibleView.imageProperty().set(null);
 					dungeonMap.setInvisbletoNull();
+					toolbar.setPower(2, new InvisibleActivate(new Invisible(dungeonMap, player)));
 				}
 				/*
 				 * Check if playerlocation is same as armor, if so play collectedgem.wav and
@@ -200,6 +182,7 @@ public class Game extends Application {
 					BackgroundMusic.collectedgem.play();
 					armorView.imageProperty().set(null);
 					dungeonMap.setArmortoNull();
+					toolbar.setPower(1, new ArmorActivate(new Armor(dungeonMap, player)));
 				}
 				/*
 				 * Check if playerlocation is same as speed, if so play collectedgem.wav and
@@ -209,12 +192,29 @@ public class Game extends Application {
 					BackgroundMusic.collectedgem.play();
 					speedView.imageProperty().set(null);
 					dungeonMap.setSpeedtoNull();
+					toolbar.setPower(4, new SpeedActivate(new Speed(dungeonMap, player)));
 				}
 				/*
 				 * Check if playerlocation is same as treasure, if so play chestopen.wav and
 				 * remove treasure from dungeonMap, sets the TreasureLocation to null
 				 */
 				if (player.getPlayerLocation().equals(dungeonMap.getTreasureLocation())) {
+					player.setAtChest();
+
+//					BackgroundMusic.chestopen.play();
+//					treasureView.imageProperty().set(null);
+//					dungeonMap.setTreasuretoNull();
+					
+				}
+				else
+				{
+					player.setAwayChest();
+
+				}
+				
+				if(player.hasOpenedChest())
+				{
+
 					BackgroundMusic.chestopen.play();
 					treasureView.imageProperty().set(null);
 					dungeonMap.setTreasuretoNull();
@@ -227,11 +227,14 @@ public class Game extends Application {
 				if (player.getPlayerLocation().equals(dungeonMap.getKeyLocation())) {
 					BackgroundMusic.chestopen.play();
 					keyView.imageProperty().set(null);
-					dungeonMap.setTreasuretoNull();
+					dungeonMap.setKeytoNull();
+					player.addKey();
+					toolbar.setPower(3, new KeyActivate(new Key(dungeonMap, player)));
 				}
 			}
 		});
 	}
+	
 
 	/* Adds pictures to the pane */
 	public void loadMap() {
