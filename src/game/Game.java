@@ -29,12 +29,16 @@ public class Game extends Application {
 
 	int[][] map;
 	final int dimensions = 15;
-	final int walls = 40;
+	final int walls = 25;
 	final int scale = 50;
 
 	Player player;
+	
+	ArrayList<Enemy> traps;
 	Enemy fireBall;
-	Enemy fireBall2;
+	Enemy ghost;
+	Enemy zombie;
+	
 	DungeonMap dungeonMap;
 	
 	Toolbar toolbar;
@@ -49,8 +53,6 @@ public class Game extends Application {
 	Stage mainStage;
 	Scene Gamescene;
 	Pane root;
-	
-	ArrayList<Enemy> traps;
 
 	/* Launches the GUI */
 	public static void main(String[] args) {
@@ -91,32 +93,35 @@ public class Game extends Application {
 		toolbar.setPower(3, new KeyActivate(new Key(dungeonMap)));
 		toolbar.setPower(4, new SpeedActivate(new Speed(dungeonMap)));
 		
-		this.traps = new ArrayList<Enemy>();
-		
 		player = new Player(dungeonMap);
-		EnemyFactory enemyFactory = new EnemyFactory();
-		fireBall = enemyFactory.getEnemy("FIRE", dungeonMap, null);
-		fireBall2 = enemyFactory.getEnemy("Fire", dungeonMap, null);
-		//fireBall = new Fireball(dungeonMap);
 		
+		/* Creates the enemies */
+		this.traps = new ArrayList<Enemy>();
+		EnemyFactory enemyFactory = new EnemyFactory();
+		fireBall = enemyFactory.getEnemy("FIRE", dungeonMap, dungeonMap.getFireLocation());
+		ghost = enemyFactory.getEnemy("GHOST", dungeonMap, dungeonMap.getGhostLocation());
+		zombie = enemyFactory.getEnemy("ZOMBIE", dungeonMap, dungeonMap.getZombieLocation());
 
 		/*
 		 * Places all the pictures on the pane and allows the user to control the player
 		 */
 		loadMap();
 		
-		
 		ArrayList<Point> trapPoints = dungeonMap.getTrapLocations();
 		for (Point location : trapPoints) {
 			Enemy trap = enemyFactory.getEnemy("TRAP", dungeonMap, location);
-			//Trap trap = new Trap(dungeonMap, location);
 			trap.addToPane(root.getChildren());
 			traps.add(trap);
 			trap.startMoving();
 		}
 		
 		fireBall.addToPane(root.getChildren());
+		ghost.addToPane(root.getChildren());
+		zombie.addToPane(root.getChildren());
+
 		fireBall.startMoving();
+		ghost.startMoving();
+		zombie.startMoving();
 		
 		movePlayer();
 //		useToolbar();

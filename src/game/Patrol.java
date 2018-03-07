@@ -18,6 +18,7 @@ public class Patrol extends Move {
 			case 1: next = new Point(current.x, current.y-1); break;
 			case 2: next = new Point(current.x+1, current.y); break;
 			case 3: next = new Point(current.x-1, current.y); break;
+			default: next = current; break;
 		}
 		return next;
 	}

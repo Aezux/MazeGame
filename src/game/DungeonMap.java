@@ -25,6 +25,8 @@ public class DungeonMap {
 	private ArrayList<Point> trapLocations;
 	private Point playerLocation;
 	private Point fireLocation;
+	private Point ghostLocation;
+	private Point zombieLocation;
 	private Point treasureLocation;
 	private Point armorLocation;
 	private Point invisibleLocation;
@@ -63,6 +65,16 @@ public class DungeonMap {
 		return fireLocation;
 	}
 	
+	/* Returns the fireball's location */
+	public Point getGhostLocation() {
+		return ghostLocation;
+	}
+	
+	/* Returns the fireball's location */
+	public Point getZombieLocation() {
+		return zombieLocation;
+	}
+	
 	/* Returns the trap locations */
 	public ArrayList<Point> getTrapLocations() {
 		return trapLocations;
@@ -73,6 +85,7 @@ public class DungeonMap {
 		this.playerLocation = playerLocation;
 	}
 	
+	/* Returns an ArrayList of all the open locations */
 	public ArrayList<Integer> getOpenLocations() {
 		return openSpots;
 	}
@@ -150,10 +163,12 @@ public class DungeonMap {
 		}
 	}
 	
-	/* Sets the players and treasures location */
+	/* Sets the player, enemies, and item locations */
 	private void setObjectives() {
 		playerLocation = generateLocation();
 		fireLocation = generateLocation();
+		zombieLocation = generateLocation();
+		ghostLocation = generateLocation();
 		treasureLocation = generateLocation();
 		armorLocation = generateLocation();
 		invisibleLocation = generateLocation();

@@ -6,30 +6,30 @@ import javafx.collections.ObservableList;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 
-/* The fireball class */
-public class Fireball extends Enemy{
+/* The zombie class */
+public class Zombie extends Enemy{
 
 	private Point currentLocation;
 	private Movement movement;
 	private Image image;
-	private ImageView fireImage;
+	private ImageView zombieImage;
 	private int sleepTime;
 	
 	/* Constructor */
-	public Fireball(DungeonMap map, Point currentLocation) {
+	public Zombie(DungeonMap map, Point currentLocation) {
 		this.currentLocation = currentLocation;
-		this.movement = new Chase(map, currentLocation);
+		this.movement = new Patrol(map, currentLocation);
 //		this.threads = Executors.newFixedThreadPool(10);
-		this.sleepTime = 200;
+		this.sleepTime = 300;
 		setImage();
 	}
 	
-	/* Adds the fireball to the pane */
+	/* Adds the zombie to the pane */
 	public void addToPane(ObservableList<Node> sceneGraph) {
-		sceneGraph.add(fireImage);
+		sceneGraph.add(zombieImage);
 	}
 	
-	/* Launches the fireball thread */
+	/* Launches the zombie thread */
 	public void startMoving() {
 		threads.submit(() -> update());
 	}
@@ -46,7 +46,7 @@ public class Fireball extends Enemy{
 	}
 	
 	/* Updates the movement */
-	private void update() {		
+	private void update() {
 		while (gameShouldRun) {
 			try {/* Put the thread to sleep */
 				Thread.sleep(sleepTime);
@@ -56,31 +56,31 @@ public class Fireball extends Enemy{
 			Point move = movement.nextPoint(currentLocation);
 			updateImage(currentLocation.x, move.x, currentLocation.y, move.y);
 			currentLocation.setLocation(move.x, move.y);
-			fireImage.setX(move.x * scale);
-			fireImage.setY(move.y * scale);
+			zombieImage.setX(move.x * scale);
+			zombieImage.setY(move.y * scale);
 		}
 	}
 	
 	/* Starting position for the fireball */
 	private void setImage() {
-		image = getImage("fire_front.png");
-		fireImage = new ImageView(image);
-		fireImage.setX(currentLocation.x * scale);
-		fireImage.setY(currentLocation.y * scale);
+		image = getImage("zombie_front.png");
+		zombieImage = new ImageView(image);
+		zombieImage.setX(currentLocation.x * scale);
+		zombieImage.setY(currentLocation.y * scale);
 	}
 	
-	/* Updates the fireball image */
+	/* Updates the zombie image */
 	private void updateImage(int oldX, int newX, int oldY, int newY) {
 		if (newX > oldX) {
-			image = getImage("fire_right.png");
+			image = getImage("zombie_right.png");
 		} else if (newX < oldX) {
-			image = getImage("fire_left.png");
+			image = getImage("zombie_left.png");
 		} else if (newY > oldY) {
-			image = getImage("fire_front.png");
+			image = getImage("zombie_front.png");
 		} else if (newY < oldY) {
-			image = getImage("fire_back.png");
+			image = getImage("zombie_back.png");
 		}
-		fireImage.setImage(image);
+		zombieImage.setImage(image);
 	}
-
+	
 }

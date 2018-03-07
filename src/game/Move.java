@@ -27,6 +27,30 @@ public class Move implements Movement {
     protected boolean openSpot(int x, int y, int[][] map) {
         return (checkBounds(x, y, map.length) && !checkWall(x, y, map));
     }
+    
+    /* Makes a copy of the original map */
+    protected int[][] buildMap(int[][] map) {
+    	int[][] copy = new int[map.length][map.length];
+    	
+    	/* Makes the copy */
+    	for (int i=0; i<map.length; ++i) {
+    		for (int j=0; j<map.length; ++j) {
+    			if (map[i][j] == 1)
+    				copy[i][j] = 1;
+    			else if (map[i][j] == 8)
+    				copy[i][j] = 8;
+    			else if (map[i][j] == 4)
+    				copy[i][j] = 4;
+    			else if (map[i][j] == 2)
+    				copy[i][j] = 2;
+    			else if (map[i][j] == 6)
+    				copy[i][j] = 6;
+    			else copy[i][j] = 0;
+    		}
+    	}
+    	
+    	return copy;
+    }
 
     /* These next two will get overwritten in other classes that extend this class */
     
