@@ -10,7 +10,7 @@ import java.util.Random;
  *    2: tile with light on the bottom
  *    3: N/A
  *    4: tile with light on the left
- *    5: N/A
+ *    5: exit
  *    6: tile with light on the right
  *    7: trap
  *    8: tile with light on the top
@@ -18,6 +18,7 @@ import java.util.Random;
  *    
  * */
 
+@SuppressWarnings("unused")
 public class DungeonMap {
 	
 	private int[][] map;
@@ -32,12 +33,12 @@ public class DungeonMap {
 	private Point invisibleLocation;
 	private Point speedLocation;
 	private Point keyLocation;
+	private Boolean hasKey;
+	private Point exitLocation;
 	private int dimensions;
 	private int walls;
 	private int traps = 3;
-	@SuppressWarnings("unused")
 	private Point[] RandomItems;
-	
 	Random rand = new Random();
 	
 	/* Constructor */
@@ -130,13 +131,28 @@ public class DungeonMap {
 		speedLocation = null;
 	}
 	
+	/* Return's the key's location */
 	public Point getKeyLocation() {
 		return keyLocation;
 	}
-	
+	/* Sets the key's location to null after being picked up */
 	public void setKeytoNull() {
 		keyLocation = null;
 	}
+	/* Sets hasKey to true */
+	public void setKeytoTrue() {
+		hasKey = true;
+		System.out.println("Picked up Key");
+	}
+	/* Used to check if Player has picked up key */
+	public Boolean checkifhasKey() {
+		return hasKey;
+	}
+	/* Return's the exit location */
+	public Point getExitLocation() {
+		return exitLocation;
+	}
+	
 	
 	/* Returns a Point where there is an empty spot */
 	private Point generateLocation() {
@@ -174,6 +190,7 @@ public class DungeonMap {
 		invisibleLocation = generateLocation();
 		speedLocation = generateLocation();
 		keyLocation = generateLocation();
+		exitLocation = new Point(7,0);
 	} 
 	
 	/* Builds all the exits on the map */
@@ -186,6 +203,7 @@ public class DungeonMap {
 		map[half][size] = 2;
 		map[0][half] = 4;
 		map[size][half] = 6;
+		map[7][0] = 5;
 	}
 	
 	/* Creates the map */

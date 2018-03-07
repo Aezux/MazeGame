@@ -20,7 +20,7 @@ public class Fireball extends Enemy{
 		this.currentLocation = currentLocation;
 		this.movement = new Chase(map, currentLocation);
 //		this.threads = Executors.newFixedThreadPool(10);
-		this.sleepTime = 200;
+		this.sleepTime = 400;
 		setImage();
 	}
 	
