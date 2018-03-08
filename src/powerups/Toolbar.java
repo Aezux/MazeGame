@@ -24,6 +24,11 @@ public class Toolbar {
 		powers[slot-1] = power;
 	}
 	
+	public void removePower(int slot)
+	{
+		powers[slot-1] = new NoPower();
+	}
+	
 	//HERE USE THIS METHOD WHEN USING A POWERUP SLOT
 	public void useSlot(int slot)
 	{

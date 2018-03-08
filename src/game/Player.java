@@ -16,6 +16,8 @@ public class Player extends Observable {
 	private int lives;
 	private Image image;
 	private int X, Y;
+	private boolean atChest = false;
+	private boolean openChest = false;
 	
 	/* Constructor */
 	public Player(DungeonMap map) {
@@ -50,6 +52,46 @@ public class Player extends Observable {
 			System.out.println("You Lose!");
 		}
 	}
+
+	public void openChest()
+	{
+		openChest = true;
+	}
+	
+	public boolean hasOpenedChest()
+	{
+		return openChest;
+	}
+	
+	public void addKey()
+	{
+		this.hasKey = true;
+	}
+	
+	public void removeKey()
+	{
+		this.hasKey = false;
+	}
+	
+	public boolean hasKey()
+	{
+		return this.hasKey;
+	}
+	
+	public void setAtChest()
+	{
+		this.atChest = true;
+	}
+	
+	public void setAwayChest()
+	{
+		this.atChest = false;
+	}
+	
+	public boolean atChest()
+	{
+		return this.atChest;
+	}
 	
 	/* Checks if the player is in bounds */
 	private boolean checkBounds(int x, int y, int size) {
@@ -58,9 +100,22 @@ public class Player extends Observable {
 	
 	/* Checks if there is a wall */
 	private boolean checkWall(int x, int y) {
+		if (map[x][y] == 5) {
+			return !checkifHasKey();
+		}
 		return map[x][y] == 1;
 	}
+	/* Sets hasKey to true */
+	public void setKeytoTrue() {
+		hasKey = true;
+		System.out.println("Picked up Key");
+	}
+	/* Used to check if Player has picked up key */
+	public Boolean checkifHasKey() {
+		return hasKey;
+	}
 	
+
 	/* Gets the new image of the player */
 	public Image newImage() {
 		return image;

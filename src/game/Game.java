@@ -3,10 +3,10 @@ package game;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Random;
-
 import javafx.application.Application;
 import javafx.application.Platform;
 import javafx.event.EventHandler;
+import javafx.geometry.Rectangle2D;
 import javafx.scene.Scene;
 import javafx.scene.control.Menu;
 import javafx.scene.control.MenuBar;
@@ -17,6 +17,7 @@ import javafx.scene.input.KeyEvent;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.Pane;
+import javafx.stage.Screen;
 import javafx.stage.Stage;
 import powerups.*;
 
@@ -50,10 +51,23 @@ public class Game extends Application {
 	ImageView speedView;
 	ImageView armorView;
 	ImageView keyView;
+	ImageView exitView;
+	
+	ImageView ToolbarViewSlot1;
+	ImageView ToolbarViewSlot2;
+	ImageView ToolbarViewSlot3;
+	ImageView ToolbarViewSlot4;
+	
+	ImageView keyViewToolbar;
+	ImageView invisibleViewToolbar;
+	ImageView speedViewToolbar;
+	ImageView armorViewToolbar;
 
 	Stage mainStage;
 	Scene Gamescene;
 	Pane root;
+	
+	Object[] Items = new Object[3];
 
 	/* Launches the GUI */
 	public static void main(String[] args) {
@@ -89,10 +103,10 @@ public class Game extends Application {
 
 		//set toolbar and its slots
 		toolbar = new Toolbar();
-		toolbar.setPower(1, new ArmorActivate(new Armor(dungeonMap)));
-		toolbar.setPower(2, new InvisibleActivate(new Invisible(dungeonMap)));
-		toolbar.setPower(3, new KeyActivate(new Key(dungeonMap)));
-		toolbar.setPower(4, new SpeedActivate(new Speed(dungeonMap)));
+//		toolbar.setPower(1, new ArmorActivate(new Armor(dungeonMap)));
+//		toolbar.setPower(2, new InvisibleActivate(new Invisible(dungeonMap)));
+//		toolbar.setPower(3, new KeyActivate(new Key(dungeonMap)));
+//		toolbar.setPower(4, new SpeedActivate(new Speed(dungeonMap)));
 		
 		player = new Player(dungeonMap);
 		
@@ -125,18 +139,30 @@ public class Game extends Application {
 		spawnEnemies("ZOMBIE", zombiePoints, zombies);
 
 		movePlayer();
-//		useToolbar();
 //		fireBall.stopMoving();
 //		for (Trap trap : traps) {
 //			trap.stopMoving();
 //		}
 		
-		/* Sets the title and displays the GUI */
+//		Rectangle2D primaryScreenBounds = Screen.getPrimary().getVisualBounds();
+//
+//        //set Stage boundaries to visible bounds of the main screen
+//		mainStage.setX(primaryScreenBounds.getMinX());
+//		mainStage.setY(primaryScreenBounds.getMinY());
+//		mainStage.setWidth(primaryScreenBounds.getWidth());
+//		mainStage.setHeight(primaryScreenBounds.getHeight());
+//		
+//		/* Sets the title and displays the GUI */
+//		Rectangle2D primaryScreenBounds = Screen.getPrimary().getVisualBounds();
+//		mainStage.setX(primaryScreenBounds.getMinX());
+//		mainStage.setY(primaryScreenBounds.getMinY());
+//		mainStage.setWidth(primaryScreenBounds.getWidth());
+//		mainStage.setHeight(primaryScreenBounds.getHeight());
 		mainStage.setTitle("Maze Game");
 		mainStage.setScene(Gamescene);
 		mainStage.show();
 	}
-	
+
 	public void spawnEnemies(String type, ArrayList<Point> enemyLocations, ArrayList<Enemy> enemyList) {
 		for (Point location : enemyLocations) {
 			Enemy enemy = enemyFactory.getEnemy(type, player, dungeonMap, location);
@@ -180,10 +206,10 @@ public class Game extends Application {
 					case RIGHT: player.move("East"); break;
 					//Toolbar keybinds here
 					//keep parameter same as digit key, handled offset in Toolbar
-					case DIGIT1: toolbar.useSlot(1); break;
-					case DIGIT2: toolbar.useSlot(2); break;
-					case DIGIT3: toolbar.useSlot(3); break;
-					case DIGIT4: toolbar.useSlot(4); break;
+					case DIGIT1: toolbar.useSlot(1); armorViewToolbar.imageProperty().set(null); break;
+					case DIGIT2: toolbar.useSlot(2); invisibleViewToolbar.imageProperty().set(null); break;
+					case DIGIT3: toolbar.useSlot(3); keyViewToolbar.imageProperty().set(null); break;
+					case DIGIT4: toolbar.useSlot(4); speedViewToolbar.imageProperty().set(null); break;
 					default: break;
 				}
 				
@@ -202,6 +228,11 @@ public class Game extends Application {
 					BackgroundMusic.collectedgem.play();
 					invisibleView.imageProperty().set(null);
 					dungeonMap.setInvisbletoNull();
+					invisibleViewToolbar = new ImageView(getImage("gem.png"));
+					invisibleViewToolbar.setX(50.0);
+					invisibleViewToolbar.setY(705.00);
+					root.getChildren().add(invisibleViewToolbar);
+					toolbar.setPower(2, new InvisibleActivate(new Invisible(dungeonMap, player)));
 				}
 				/*
 				 * Check if playerlocation is same as armor, if so play collectedgem.wav and
@@ -211,6 +242,11 @@ public class Game extends Application {
 					BackgroundMusic.collectedgem.play();
 					armorView.imageProperty().set(null);
 					dungeonMap.setArmortoNull();
+					armorViewToolbar = new ImageView(getImage("armor.png"));
+					armorViewToolbar.setX(0.0);
+					armorViewToolbar.setY(705.00);
+					root.getChildren().add(armorViewToolbar);
+					toolbar.setPower(1, new ArmorActivate(new Armor(dungeonMap, player)));
 				}
 				/*
 				 * Check if playerlocation is same as speed, if so play collectedgem.wav and
@@ -220,12 +256,26 @@ public class Game extends Application {
 					BackgroundMusic.collectedgem.play();
 					speedView.imageProperty().set(null);
 					dungeonMap.setSpeedtoNull();
+					speedViewToolbar = new ImageView(getImage("speed.png"));
+					speedViewToolbar.setX(150.0);
+					speedViewToolbar.setY(705.00);
+					root.getChildren().add(speedViewToolbar);
+					toolbar.setPower(4, new SpeedActivate(new Speed(dungeonMap, player)));
 				}
 				/*
 				 * Check if playerlocation is same as treasure, if so play chestopen.wav and
 				 * remove treasure from dungeonMap, sets the TreasureLocation to null
 				 */
 				if (player.getPlayerLocation().equals(dungeonMap.getTreasureLocation())) {
+					player.setAtChest();
+				}else {
+					player.setAwayChest();
+				}
+				if (player.hasOpenedChest()) {
+					Items[0] = new Armor(dungeonMap, player);
+					Items[1] = new Invisible(dungeonMap, player);
+					Items[2] = new Speed(dungeonMap, player);
+					Object randomItem = Items[(int)(Math.random() * Items.length)];
 					BackgroundMusic.chestopen.play();
 					treasureView.imageProperty().set(null);
 					dungeonMap.setTreasuretoNull();
@@ -236,13 +286,31 @@ public class Game extends Application {
 				 * remove key from dungeonMap, sets the KeyLocation to null
 				 */
 				if (player.getPlayerLocation().equals(dungeonMap.getKeyLocation())) {
-					BackgroundMusic.chestopen.play();
+					BackgroundMusic.keycollected.play();
 					keyView.imageProperty().set(null);
-					dungeonMap.setTreasuretoNull();
+					dungeonMap.setKeytoNull();
+					player.setKeytoTrue();
+					keyViewToolbar = new ImageView(getImage("key.png"));
+					keyViewToolbar.setX(100.0);
+					keyViewToolbar.setY(705.00);
+					root.getChildren().add(keyViewToolbar);
+					toolbar.setPower(3, new KeyActivate(new Key(dungeonMap, player)));
+				}
+				/*
+				 * Check if player has the key and checks if playerLocation is the same as the
+				 * exitLocation. Plays fade to white transition to exit the game back to intro
+				 */
+				if (player.checkifHasKey() == true && player.getPlayerLocation().equals(dungeonMap.getExitLocation())) {
+					exitView.setImage(getImage("door2.png"));
+					exitView.setImage(getImage("door3.png"));
+					exitView.setImage(getImage("door4.png"));
+					exitView.setImage(getImage("door5.png"));
+					exitView.setImage(getImage("door6.png"));
 				}
 			}
 		});
 	}
+	
 
 	/* Adds pictures to the pane */
 	public void loadMap() {
@@ -260,7 +328,7 @@ public class Game extends Application {
 					case 1: image = getImage("wall" + rng + ".png"); break;
 					case 2: image = getImage("downLight.png"); break;
 					case 4: image = getImage("leftLight.png"); break;
-					// case 5: break;
+					case 5: image = getImage("door1.png"); break;
 					case 6: image = getImage("rightLight.png"); break;
 					case 8: image = getImage("upLight.png"); break;
 					default: image = null; break;
@@ -308,6 +376,51 @@ public class Game extends Application {
 		playerView.setX(player.getPlayerLocation().x * scale);
 		playerView.setY(player.getPlayerLocation().y * scale);
 		root.getChildren().add(playerView);
+
+		/* Adds the door image */
+		exitView = new ImageView(getImage("door1.png"));
+		exitView.setX(dungeonMap.getExitLocation().x * scale);
+		exitView.setY(dungeonMap.getExitLocation().y * scale);
+		root.getChildren().add(exitView);
+	
+		/* Adds a slot for Armor Activate  */
+		Image ToolbarImage = getImage("Individual.png");
+		ToolbarViewSlot1 = new ImageView(ToolbarImage);
+		ToolbarViewSlot1.setSmooth(false);
+		ToolbarViewSlot1.setFitWidth((int) ToolbarImage.getWidth());
+		ToolbarViewSlot1.setFitHeight((int) ToolbarImage.getWidth());
+		ToolbarViewSlot1.setX(0.0);
+		ToolbarViewSlot1.setY(700.00);
+		
+		/* Adds a slot for Invisible Activate  */
+		Image ToolbarImage2 = getImage("individual.png");
+		ToolbarViewSlot2 = new ImageView(ToolbarImage);
+		ToolbarViewSlot2.setSmooth(false);
+		ToolbarViewSlot2.setFitWidth((int) ToolbarImage.getWidth());
+		ToolbarViewSlot2.setFitHeight((int) ToolbarImage.getWidth());
+		ToolbarViewSlot2.setX(50.0);
+		ToolbarViewSlot2.setY(700.00);
+		
+		/* Adds a slot for Key Activate  */
+		Image ToolbarImage3 = getImage("individual.png");
+		ToolbarViewSlot3 = new ImageView(ToolbarImage);
+		ToolbarViewSlot3.setSmooth(false);
+		ToolbarViewSlot3.setFitWidth((int) ToolbarImage.getWidth());
+		ToolbarViewSlot3.setFitHeight((int) ToolbarImage.getWidth());
+		ToolbarViewSlot3.setX(100.0);
+		ToolbarViewSlot3.setY(700.00);
+		
+		/* Adds a slot for Speed Activate  */
+		Image ToolbarImage4 = getImage("individual.png");
+		ToolbarViewSlot4 = new ImageView(ToolbarImage);
+		ToolbarViewSlot4.setSmooth(false);
+		ToolbarViewSlot4.setFitWidth((int) ToolbarImage.getWidth());
+		ToolbarViewSlot4.setFitHeight((int) ToolbarImage.getWidth());
+		ToolbarViewSlot4.setX(150.0);
+		ToolbarViewSlot4.setY(700.00);
+
+		/* Adds the Slots to the Root Pane  */
+		root.getChildren().addAll(ToolbarViewSlot1, ToolbarViewSlot2, ToolbarViewSlot3, ToolbarViewSlot4);
 
 		/* Loops through Background Music */
 		BackgroundMusic.backgroundmusic.loop();
