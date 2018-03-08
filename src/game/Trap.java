@@ -40,6 +40,19 @@ public class Trap extends Enemy{
 		this.movement = movement;
 	}
 	
+	/* The player notifies the enemies */
+	public void update(Observable o, Object arg) {
+		if (o instanceof Player) {
+			switch (arg.toString()) {				
+				case "speed": 
+					this.sleepTime = sleepTime * 2;
+				break;
+				
+				default: break;
+			}
+		}
+	}
+	
 	/* Launches the trap thread */
 	public void run() {
 		while (gameShouldRun) {
@@ -95,12 +108,6 @@ public class Trap extends Enemy{
 	/* Overwritten the toString method */
 	public String toString() {
 		return "";
-	}
-
-	@Override
-	public void update(Observable o, Object arg) {
-		// TODO Auto-generated method stub
-		
 	}
 
 }

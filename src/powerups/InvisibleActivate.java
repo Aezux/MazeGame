@@ -9,7 +9,7 @@ public class InvisibleActivate extends PowerUps {
 	{
 		this.invis = invis;
 	}
-	@Override
+
 	public void execute() {
 		invis.activatePower();
 		

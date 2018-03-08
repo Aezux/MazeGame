@@ -42,8 +42,22 @@ public class Zombie extends Enemy{
 	/* The player notifies the enemies */
 	public void update(Observable o, Object arg) {
 		if (o instanceof Player) {
-			this.movement = new Chase(map, currentLocation);
-			sleepTime = 100;
+			switch (arg.toString()) {
+				case "key": 
+					this.movement = new Chase(map, currentLocation);
+					sleepTime = 100;
+				break;
+				
+				case "speed": 
+					this.sleepTime = sleepTime * 2;
+				break;
+				
+				case "patrol": 
+					this.movement = new Patrol(map, currentLocation);
+				break;
+				
+				default: break;
+			}
 		}
 	}
 	

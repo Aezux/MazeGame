@@ -2,7 +2,6 @@ package powerups;
 
 public class KeyActivate extends PowerUps {
 
-	
 	Key key;
 	
 	public KeyActivate(Key key)

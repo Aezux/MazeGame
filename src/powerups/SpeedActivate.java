@@ -9,7 +9,7 @@ public class SpeedActivate extends PowerUps {
 	{
 		this.speed = speed;
 	}
-	@Override
+
 	public void execute() {
 		speed.activatePower();
 		

@@ -1,12 +1,10 @@
 package game;
 
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.Random;
 import javafx.application.Application;
 import javafx.application.Platform;
 import javafx.event.EventHandler;
-import javafx.geometry.Rectangle2D;
 import javafx.scene.Scene;
 import javafx.scene.control.Menu;
 import javafx.scene.control.MenuBar;
@@ -17,13 +15,12 @@ import javafx.scene.input.KeyEvent;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.Pane;
-import javafx.stage.Screen;
+import javafx.scene.layout.VBox;
 import javafx.stage.Stage;
 import powerups.*;
 
 import java.awt.Point;
 
-@SuppressWarnings("unused")
 public class Game extends Application {
 
 	Random rand = new Random();
@@ -42,6 +39,7 @@ public class Game extends Application {
 	ArrayList<Enemy> ghosts;
 	
 	DungeonMap dungeonMap;
+	Door door;
 	
 	Toolbar toolbar;
 
@@ -51,7 +49,6 @@ public class Game extends Application {
 	ImageView speedView;
 	ImageView armorView;
 	ImageView keyView;
-	ImageView exitView;
 	
 	ImageView ToolbarViewSlot1;
 	ImageView ToolbarViewSlot2;
@@ -66,8 +63,6 @@ public class Game extends Application {
 	Stage mainStage;
 	Scene Gamescene;
 	Pane root;
-	
-	Object[] Items = new Object[3];
 
 	/* Launches the GUI */
 	public static void main(String[] args) {
@@ -77,6 +72,8 @@ public class Game extends Application {
 
 	/* Starts the whole program with the input scene */
 	public void start(Stage game) throws Exception {
+		mainStage = game;
+		
 		/* Creates a menu bar on the top containing File, Restart, Quit */
 		MenuBar menuBar = new MenuBar();
 		Menu menu = new Menu("File");
@@ -90,24 +87,18 @@ public class Game extends Application {
 		BorderPane borderpane = new BorderPane();
 		borderpane.setTop(menuBar);
 
-		mainStage = game;
 		/* Creates the pane and randomizes the whole map */
 		root = new AnchorPane();
-		/* Adds the menu bar to the root */
-		root.getChildren().add(borderpane);
+
 		Gamescene = new Scene(root, scale * dimensions, scale * dimensions);
 
-		dungeonMap = new DungeonMap(dimensions, walls);
+		dungeonMap = DungeonMap.getInstance(dimensions, walls);
 		map = dungeonMap.getMap();
-		
+		door = new Door(dungeonMap);
 
 		//set toolbar and its slots
 		toolbar = new Toolbar();
-//		toolbar.setPower(1, new ArmorActivate(new Armor(dungeonMap)));
-//		toolbar.setPower(2, new InvisibleActivate(new Invisible(dungeonMap)));
-//		toolbar.setPower(3, new KeyActivate(new Key(dungeonMap)));
-//		toolbar.setPower(4, new SpeedActivate(new Speed(dungeonMap)));
-		
+
 		player = new Player(dungeonMap);
 		
 		/* Creates the enemies */
@@ -117,9 +108,6 @@ public class Game extends Application {
 		this.zombies = new ArrayList<Enemy>();
 		
 		enemyFactory = new EnemyFactory();
-//		fireBall = enemyFactory.getEnemy("FIRE", dungeonMap, dungeonMap.getFireLocation());
-//		ghost = enemyFactory.getEnemy("GHOST", dungeonMap, dungeonMap.getGhostLocation());
-//		zombie = enemyFactory.getEnemy("ZOMBIE", dungeonMap, dungeonMap.getZombieLocation());
 
 		/*
 		 * Places all the pictures on the pane and allows the user to control the player
@@ -137,30 +125,54 @@ public class Game extends Application {
 		
 		ArrayList<Point> zombiePoints = dungeonMap.getZombieLocations();
 		spawnEnemies("ZOMBIE", zombiePoints, zombies);
+		
+		root.getChildren().add(borderpane);
 
 		movePlayer();
-//		fireBall.stopMoving();
-//		for (Trap trap : traps) {
-//			trap.stopMoving();
-//		}
 		
-//		Rectangle2D primaryScreenBounds = Screen.getPrimary().getVisualBounds();
-//
-//        //set Stage boundaries to visible bounds of the main screen
-//		mainStage.setX(primaryScreenBounds.getMinX());
-//		mainStage.setY(primaryScreenBounds.getMinY());
-//		mainStage.setWidth(primaryScreenBounds.getWidth());
-//		mainStage.setHeight(primaryScreenBounds.getHeight());
-//		
-//		/* Sets the title and displays the GUI */
-//		Rectangle2D primaryScreenBounds = Screen.getPrimary().getVisualBounds();
-//		mainStage.setX(primaryScreenBounds.getMinX());
-//		mainStage.setY(primaryScreenBounds.getMinY());
-//		mainStage.setWidth(primaryScreenBounds.getWidth());
-//		mainStage.setHeight(primaryScreenBounds.getHeight());
 		mainStage.setTitle("Maze Game");
 		mainStage.setScene(Gamescene);
 		mainStage.show();
+	}
+	
+	/* Scene for when the player dies */
+	private void gameLose() {
+		VBox screen = new VBox(dimensions);
+		Image endImage;// = getImage("gameOver.jpg");
+		
+		/* Background image that switches file path based on the operating system you are using */
+		if (System.getProperty("os.name").startsWith("Windows"))
+			endImage = new Image("file:Images\\gameOver.jpg", scale*dimensions, scale*dimensions, true, true);
+		else
+			endImage = new Image("file:Images//gameOver.jpg", scale*dimensions, scale*dimensions, true, true);
+		
+		/* Loads the whole scene and launches it */
+		ImageView endImageView = new ImageView(endImage);
+		
+		screen.getChildren().add(endImageView);
+		Scene overScene = new Scene(screen, scale*dimensions, scale*dimensions);
+		
+		mainStage.setScene(overScene);
+	}
+	
+	/* Scene for when the player wins */
+	private void gameWin() {
+		VBox screen = new VBox(dimensions);
+		Image endImage;// = getImage("gameOver.jpg");
+		
+		/* Background image that switches file path based on the operating system you are using */
+		if (System.getProperty("os.name").startsWith("Windows"))
+			endImage = new Image("file:Images\\GameWin.png", scale*dimensions, scale*dimensions, true, true);
+		else
+			endImage = new Image("file:Images//GameWin.png", scale*dimensions, scale*dimensions, true, true);
+		
+		/* Loads the whole scene and launches it */
+		ImageView endImageView = new ImageView(endImage);
+		
+		screen.getChildren().add(endImageView);
+		Scene overScene = new Scene(screen, scale*dimensions, scale*dimensions);
+		
+		mainStage.setScene(overScene);
 	}
 
 	public void spawnEnemies(String type, ArrayList<Point> enemyLocations, ArrayList<Enemy> enemyList) {
@@ -173,25 +185,6 @@ public class Game extends Application {
 		}
 	}
 	
-//	//The key bindings for all of the toolbar items.
-//	public void useToolbar()
-//	{
-//		Gamescene.setOnKeyPressed(new EventHandler<KeyEvent>() {
-//			public void handle(KeyEvent event) {
-//
-//				/* Moves the ship using the keyboard */
-//				switch (event.getCode()) {
-//					//keep parameter same as digit key, handled offset in Toolbar
-//					case DIGIT1: toolbar.useSlot(1); break;
-//					case DIGIT2: toolbar.useSlot(2); break;
-//					case DIGIT3: toolbar.useSlot(3); break;
-//					case DIGIT4: toolbar.useSlot(4); break;
-//					default: break;
-//				}
-//			}
-//		});
-//	}
-
 	/* The player controls the knight with the keyboard */
 	public void movePlayer() {
 
@@ -204,6 +197,7 @@ public class Game extends Application {
 					case DOWN: player.move("South"); break;
 					case LEFT: player.move("West"); break;
 					case RIGHT: player.move("East"); break;
+					
 					//Toolbar keybinds here
 					//keep parameter same as digit key, handled offset in Toolbar
 					case DIGIT1: toolbar.useSlot(1); armorViewToolbar.imageProperty().set(null); break;
@@ -212,6 +206,14 @@ public class Game extends Application {
 					case DIGIT4: toolbar.useSlot(4); speedViewToolbar.imageProperty().set(null); break;
 					default: break;
 				}
+				
+				/* Player wins */
+				if (player.hasWon())
+					gameWin();
+				
+				/* Player loses */
+				if (player.hasLost())
+					gameLose();
 				
 				/* Update the player */
 				playerView.setImage(player.newImage());
@@ -230,7 +232,7 @@ public class Game extends Application {
 					dungeonMap.setInvisbletoNull();
 					invisibleViewToolbar = new ImageView(getImage("gem.png"));
 					invisibleViewToolbar.setX(50.0);
-					invisibleViewToolbar.setY(705.00);
+					invisibleViewToolbar.setY(975.50);
 					root.getChildren().add(invisibleViewToolbar);
 					toolbar.setPower(2, new InvisibleActivate(new Invisible(dungeonMap, player)));
 				}
@@ -244,7 +246,7 @@ public class Game extends Application {
 					dungeonMap.setArmortoNull();
 					armorViewToolbar = new ImageView(getImage("armor.png"));
 					armorViewToolbar.setX(0.0);
-					armorViewToolbar.setY(705.00);
+					armorViewToolbar.setY(975.50);
 					root.getChildren().add(armorViewToolbar);
 					toolbar.setPower(1, new ArmorActivate(new Armor(dungeonMap, player)));
 				}
@@ -258,7 +260,7 @@ public class Game extends Application {
 					dungeonMap.setSpeedtoNull();
 					speedViewToolbar = new ImageView(getImage("speed.png"));
 					speedViewToolbar.setX(150.0);
-					speedViewToolbar.setY(705.00);
+					speedViewToolbar.setY(975.50);
 					root.getChildren().add(speedViewToolbar);
 					toolbar.setPower(4, new SpeedActivate(new Speed(dungeonMap, player)));
 				}
@@ -272,13 +274,12 @@ public class Game extends Application {
 					player.setAwayChest();
 				}
 				if (player.hasOpenedChest()) {
-					Items[0] = new Armor(dungeonMap, player);
-					Items[1] = new Invisible(dungeonMap, player);
-					Items[2] = new Speed(dungeonMap, player);
-					Object randomItem = Items[(int)(Math.random() * Items.length)];
 					BackgroundMusic.chestopen.play();
 					treasureView.imageProperty().set(null);
 					dungeonMap.setTreasuretoNull();
+					Thread doorThread = new Thread(door);
+					doorThread.start();
+					player.usedChest();
 				}
 				
 				/*
@@ -292,26 +293,14 @@ public class Game extends Application {
 					player.setKeytoTrue();
 					keyViewToolbar = new ImageView(getImage("key.png"));
 					keyViewToolbar.setX(100.0);
-					keyViewToolbar.setY(705.00);
+					keyViewToolbar.setY(975.50);
 					root.getChildren().add(keyViewToolbar);
 					toolbar.setPower(3, new KeyActivate(new Key(dungeonMap, player)));
-				}
-				/*
-				 * Check if player has the key and checks if playerLocation is the same as the
-				 * exitLocation. Plays fade to white transition to exit the game back to intro
-				 */
-				if (player.checkifHasKey() == true && player.getPlayerLocation().equals(dungeonMap.getExitLocation())) {
-					exitView.setImage(getImage("door2.png"));
-					exitView.setImage(getImage("door3.png"));
-					exitView.setImage(getImage("door4.png"));
-					exitView.setImage(getImage("door5.png"));
-					exitView.setImage(getImage("door6.png"));
 				}
 			}
 		});
 	}
 	
-
 	/* Adds pictures to the pane */
 	public void loadMap() {
 
@@ -372,16 +361,13 @@ public class Game extends Application {
 		root.getChildren().add(keyView);
 		
 		/* Adds the player image */
-		playerView = new ImageView(getImage("backView.png"));
+		playerView = new ImageView(getImage("playerStart.png"));
 		playerView.setX(player.getPlayerLocation().x * scale);
 		playerView.setY(player.getPlayerLocation().y * scale);
 		root.getChildren().add(playerView);
 
 		/* Adds the door image */
-		exitView = new ImageView(getImage("door1.png"));
-		exitView.setX(dungeonMap.getExitLocation().x * scale);
-		exitView.setY(dungeonMap.getExitLocation().y * scale);
-		root.getChildren().add(exitView);
+		door.addToPane(root.getChildren());
 	
 		/* Adds a slot for Armor Activate  */
 		Image ToolbarImage = getImage("Individual.png");
@@ -390,34 +376,31 @@ public class Game extends Application {
 		ToolbarViewSlot1.setFitWidth((int) ToolbarImage.getWidth());
 		ToolbarViewSlot1.setFitHeight((int) ToolbarImage.getWidth());
 		ToolbarViewSlot1.setX(0.0);
-		ToolbarViewSlot1.setY(700.00);
+		ToolbarViewSlot1.setY(974.00);
 		
 		/* Adds a slot for Invisible Activate  */
-		Image ToolbarImage2 = getImage("individual.png");
 		ToolbarViewSlot2 = new ImageView(ToolbarImage);
 		ToolbarViewSlot2.setSmooth(false);
 		ToolbarViewSlot2.setFitWidth((int) ToolbarImage.getWidth());
 		ToolbarViewSlot2.setFitHeight((int) ToolbarImage.getWidth());
 		ToolbarViewSlot2.setX(50.0);
-		ToolbarViewSlot2.setY(700.00);
+		ToolbarViewSlot2.setY(974.00);
 		
 		/* Adds a slot for Key Activate  */
-		Image ToolbarImage3 = getImage("individual.png");
 		ToolbarViewSlot3 = new ImageView(ToolbarImage);
 		ToolbarViewSlot3.setSmooth(false);
 		ToolbarViewSlot3.setFitWidth((int) ToolbarImage.getWidth());
 		ToolbarViewSlot3.setFitHeight((int) ToolbarImage.getWidth());
 		ToolbarViewSlot3.setX(100.0);
-		ToolbarViewSlot3.setY(700.00);
+		ToolbarViewSlot3.setY(974.00);
 		
 		/* Adds a slot for Speed Activate  */
-		Image ToolbarImage4 = getImage("individual.png");
 		ToolbarViewSlot4 = new ImageView(ToolbarImage);
 		ToolbarViewSlot4.setSmooth(false);
 		ToolbarViewSlot4.setFitWidth((int) ToolbarImage.getWidth());
 		ToolbarViewSlot4.setFitHeight((int) ToolbarImage.getWidth());
 		ToolbarViewSlot4.setX(150.0);
-		ToolbarViewSlot4.setY(700.00);
+		ToolbarViewSlot4.setY(974.00);
 
 		/* Adds the Slots to the Root Pane  */
 		root.getChildren().addAll(ToolbarViewSlot1, ToolbarViewSlot2, ToolbarViewSlot3, ToolbarViewSlot4);

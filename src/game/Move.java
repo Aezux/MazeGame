@@ -37,14 +37,6 @@ public class Move implements Movement {
     		for (int j=0; j<map.length; ++j) {
     			if (map[i][j] == 1)
     				copy[i][j] = 1;
-    			else if (map[i][j] == 8)
-    				copy[i][j] = 8;
-    			else if (map[i][j] == 4)
-    				copy[i][j] = 4;
-    			else if (map[i][j] == 2)
-    				copy[i][j] = 2;
-    			else if (map[i][j] == 6)
-    				copy[i][j] = 6;
     			else copy[i][j] = 0;
     		}
     	}

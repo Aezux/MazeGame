@@ -9,7 +9,7 @@ public class ArmorActivate extends PowerUps {
 	{
 		this.armor = armor;
 	}
-	@Override
+
 	public void execute() {
 		armor.activate();
 		

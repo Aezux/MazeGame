@@ -1,12 +1,8 @@
 package game;
 
 import java.io.File;
-
 import javax.sound.sampled.*;
 
-import javafx.scene.image.Image;
-
-@SuppressWarnings("unused")
 public class BackgroundMusic {
     private Clip clip;
     public static BackgroundMusic backgroundmusic = getFile("backgroundmusic.wav");

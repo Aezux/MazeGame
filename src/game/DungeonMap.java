@@ -18,8 +18,12 @@ import java.util.Random;
  *    
  * */
 
-@SuppressWarnings("unused")
 public class DungeonMap {
+	
+	private final int trapCount = 1;
+	private final int fireballCount = 1;
+	private final int ghostCount = 1;
+	private final int zombieCount = 1;
 	
 	private int[][] map;
 	private ArrayList<Integer> openSpots;
@@ -29,9 +33,6 @@ public class DungeonMap {
 	private ArrayList<Point> zombieLocations;
 	
 	private Point playerLocation;
-	private Point fireLocation;
-	private Point ghostLocation;
-	private Point zombieLocation;
 	private Point treasureLocation;
 	private Point armorLocation;
 	private Point invisibleLocation;
@@ -42,14 +43,16 @@ public class DungeonMap {
 	private int dimensions;
 	private int walls;
 
-	private Point[] RandomItems;
 	Random rand = new Random();
 	
+	private static DungeonMap uniqueInstance;
+	
 	/* Constructor */
-	public DungeonMap(int dimensions, int walls) {
+	private DungeonMap(int dimensions, int walls) {
 		this.map = new int[dimensions][dimensions];
 		this.dimensions = dimensions;
 		this.walls = walls;
+		
 		openSpots = new ArrayList<Integer>();
 		
 		/* ArrayLists to store all the enemy locations */
@@ -60,6 +63,13 @@ public class DungeonMap {
 		
 		/* Builds the map */
 		buildMap();
+	}
+	
+	public static DungeonMap getInstance(int dimensions, int walls) {
+		if (uniqueInstance == null) {
+			uniqueInstance = new DungeonMap(dimensions, walls);
+		}
+		return uniqueInstance;
 	}
 	
 	/* Returns map */
@@ -153,7 +163,6 @@ public class DungeonMap {
 	/* Sets hasKey to true */
 	public void setKeytoTrue() {
 		hasKey = true;
-		System.out.println("Picked up Key");
 	}
 	/* Used to check if Player has picked up key */
 	public Boolean checkifhasKey() {
@@ -184,25 +193,25 @@ public class DungeonMap {
 		}
 		
 		/* Generate the trap */
-		for (int i=0; i<1; ++i) {
+		for (int i=0; i<trapCount; ++i) {
 			Point point = generateLocation();
 			trapLocations.add(point);
 		}
 		
 		/* Generate the fireballs */
-		for (int i=0; i<1; ++i) {
+		for (int i=0; i<fireballCount; ++i) {
 			Point point = generateLocation();
 			fireLocations.add(point);
 		}
 		
 		/* Generate the zombies */
-		for (int i=0; i<1; ++i) {
+		for (int i=0; i<zombieCount; ++i) {
 			Point point = generateLocation();
 			zombieLocations.add(point);
 		}
 		
 		/* Generate the ghosts */
-		for (int i=0; i<1; ++i) {
+		for (int i=0; i<ghostCount; ++i) {
 			Point point = generateLocation();
 			ghostLocations.add(point);
 		}
@@ -216,20 +225,8 @@ public class DungeonMap {
 		invisibleLocation = generateLocation();
 		speedLocation = generateLocation();
 		keyLocation = generateLocation();
-		exitLocation = new Point(7,0);
-	} 
-	
-	/* Builds all the exits on the map */
-	private void buildExits() {
-		int size = dimensions-1;
-		int half = size/2;
-		
-		/* Builds all the doorways */
-		map[half][0] = 8;
-		map[half][size] = 2;
-		map[0][half] = 4;
-		map[size][half] = 6;
-		map[7][0] = 5;
+		exitLocation = new Point((dimensions-1)/2,0);
+		map[(dimensions-1)/2][0] = 5;
 	}
 	
 	/* Creates the map */
@@ -256,7 +253,6 @@ public class DungeonMap {
 				}
 			}
 		}
-		buildExits();
 		setLocations();
 		setObjectives();
 	}

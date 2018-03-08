@@ -2,22 +2,25 @@ package game;
 
 import java.awt.Point;
 import java.util.Observable;
-
 import javafx.scene.image.Image;
  
-@SuppressWarnings("unused")
 public class Player extends Observable {
 
 	private int[][] map;
-	private DungeonMap dungeon;
-	private Point currentLocation;
-	private boolean hasKey = false;
 	private int scale = 25;
 	private int lives;
-	private Image image;
 	private int X, Y;
+	
+	private DungeonMap dungeon;
+	private Point currentLocation;
+	private Image image;
+	
+	private boolean hasKey = false;
 	private boolean atChest = false;
 	private boolean openChest = false;
+	private boolean winCondition = false;
+	private boolean wonGame = false;
+	private boolean lostGame = false;
 	
 	/* Constructor */
 	public Player(DungeonMap map) {
@@ -46,11 +49,20 @@ public class Player extends Observable {
 	
 	/* Takes away a life from the player */
 	public void loseLife() {
-		System.out.println("Lost a life");
 		--lives;
 		if (lives <= 0) {
-			System.out.println("You Lose!");
+			lostGame = true;
 		}
+	}
+	
+	/* Checks if the player has won */
+	public boolean hasWon() {
+		return wonGame;
+	}
+	
+	/* Checks if the player lost the game */
+	public boolean hasLost() {
+		return lostGame;
 	}
 
 	public void openChest()
@@ -61,6 +73,11 @@ public class Player extends Observable {
 	public boolean hasOpenedChest()
 	{
 		return openChest;
+	}
+	
+	public void usedChest() {
+		openChest = false;
+		winCondition = true;
 	}
 	
 	public void addKey()
@@ -101,30 +118,31 @@ public class Player extends Observable {
 	/* Checks if there is a wall */
 	private boolean checkWall(int x, int y) {
 		if (map[x][y] == 5) {
-			return !checkifHasKey();
+			return !winCondition;
 		}
 		return map[x][y] == 1;
 	}
+	
 	/* Sets hasKey to true */
 	public void setKeytoTrue() {
 		hasKey = true;
-		System.out.println("Picked up Key");
+		alert("key");
 	}
+	
 	/* Used to check if Player has picked up key */
 	public Boolean checkifHasKey() {
 		return hasKey;
 	}
-	
 
 	/* Gets the new image of the player */
 	public Image newImage() {
 		return image;
 	}
 	
-	/* Updates the Observers that the player has the key */
-	public void UserhasKey() {
+	/* Updates the Observers */
+	public void alert(String argument) {
 		setChanged();
-		notifyObservers();
+		notifyObservers(argument);
 	}
 	
 	/* Move the player */
@@ -140,6 +158,9 @@ public class Player extends Observable {
 		if (checkBounds(X, Y, map.length) && !checkWall(X, Y)) {
 			currentLocation.setLocation(X, Y);
 			dungeon.setPlayerLocation(currentLocation);
+		}
+		if (map[X][Y] == 5) {
+			wonGame = true;
 		}
 	}
 
