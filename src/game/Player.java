@@ -48,8 +48,12 @@ public class Player {
 			System.out.println("You Lose!");
 		}
 	}
+<<<<<<< HEAD
 	public void openChest()
 	{
+=======
+	public void openChest() {
+>>>>>>> master_with_toolbar
 		openChest = true;
 	}
 	
@@ -87,8 +91,11 @@ public class Player {
 	{
 		return this.atChest;
 	}
+<<<<<<< HEAD
 	
 	
+=======
+>>>>>>> master_with_toolbar
 	
 	/* Checks if the player is in bounds */
 	private boolean checkBounds(int x, int y, int size) {

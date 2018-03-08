@@ -10,7 +10,7 @@ import java.util.Random;
  *    2: tile with light on the bottom
  *    3: N/A
  *    4: tile with light on the left
- *    5: N/A
+ *    5: exit
  *    6: tile with light on the right
  *    7: trap
  *    8: tile with light on the top
@@ -18,6 +18,7 @@ import java.util.Random;
  *    
  * */
 
+@SuppressWarnings("unused")
 public class DungeonMap {
 	
 	private int[][] map;
@@ -37,9 +38,7 @@ public class DungeonMap {
 	private int dimensions;
 	private int walls;
 	private int traps = 3;
-	@SuppressWarnings("unused")
 	private Point[] RandomItems;
-	
 	Random rand = new Random();
 	
 	/* Constructor */
@@ -153,6 +152,10 @@ public class DungeonMap {
 	public Point getExitLocation() {
 		return exitLocation;
 	}
+<<<<<<< HEAD
+=======
+	
+>>>>>>> master_with_toolbar
 	
 	/* Returns a Point where there is an empty spot */
 	private Point generateLocation() {

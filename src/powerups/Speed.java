@@ -18,6 +18,7 @@ public class Speed {
 		this.player = p;
 		this.map = map.getMap();
 		this.SpeedLocation = map.getSpeedLocation();
+<<<<<<< HEAD
 //		updateCoordinates();
 	}
 
@@ -27,6 +28,9 @@ public class Speed {
 //		this.Y = (int) SpeedLocation.getY();
 //
 //	}
+=======
+	}
+>>>>>>> master_with_toolbar
 
 	public void activatePower()
 	{

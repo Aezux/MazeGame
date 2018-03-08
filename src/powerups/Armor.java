@@ -20,6 +20,7 @@ public class Armor{
 		this.player = p;
 		this.map = map.getMap();
 		this.ArmorLocation = map.getArmorLocation();
+<<<<<<< HEAD
 //		updateCoordinates();
 	}
 	/* Updates Armor Location Coordinates */
@@ -28,19 +29,20 @@ public class Armor{
 //		this.Y = (int) ArmorLocation.getY();
 //	}
 	
+=======
+	}
+>>>>>>> master_with_toolbar
 	public void activate()
 	{
 		if(uses > 0)
 		{
 			player.addLife();
+<<<<<<< HEAD
 			
 			
+=======
+>>>>>>> master_with_toolbar
 			uses--;
-			System.out.println("Using Armor, " + uses + " uses remaining.");
-		}
-		else
-		{
-			System.out.println("No uses remaining.");
 		}
 	}
 }

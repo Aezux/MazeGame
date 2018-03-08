@@ -21,6 +21,7 @@ public class Key {
 		this.player = p;
 		this.map = map.getMap();
 		this.KeyLocation = map.getKeyLocation();
+<<<<<<< HEAD
 //		updateCoordinates();
 	}
 	/* Updates Key Location Coordinates */
@@ -28,6 +29,9 @@ public class Key {
 //		this.X = (int) KeyLocation.getX();
 //		this.Y = (int) KeyLocation.getY();
 //	}
+=======
+	}
+>>>>>>> master_with_toolbar
 	
 	public void activatePower()
 	{

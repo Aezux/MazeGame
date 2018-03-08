@@ -18,6 +18,7 @@ public class Invisible{
 		this.player = p;
 		this.map = map.getMap();
 		this.InvisibleLocation = map.getInvisibleLocation();
+<<<<<<< HEAD
 //		updateCoordinates();
 	}
 	/* Updates Invisible Location Coordinates */
@@ -26,6 +27,9 @@ public class Invisible{
 //		this.Y = (int) InvisibleLocation.getY();
 //	}
 	
+=======
+	}
+>>>>>>> master_with_toolbar
 
 	public void activatePower()
 	{

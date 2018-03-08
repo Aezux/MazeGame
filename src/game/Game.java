@@ -68,6 +68,10 @@ public class Game extends Application {
 	Pane root;
 	
 	Object[] Items = new Object[3];
+<<<<<<< HEAD
+=======
+	
+>>>>>>> master_with_toolbar
 
 	/* Launches the GUI */
 	public static void main(String[] args) {
@@ -103,11 +107,14 @@ public class Game extends Application {
 
 		//set toolbar and its slots
 		toolbar = new Toolbar();
+<<<<<<< HEAD
 //		toolbar.setPower(1, new ArmorActivate(new Armor(dungeonMap)));
 //		toolbar.setPower(2, new InvisibleActivate(new Invisible(dungeonMap)));
 //		toolbar.setPower(3, new KeyActivate(new Key(dungeonMap)));
 //		toolbar.setPower(4, new SpeedActivate(new Speed(dungeonMap)));
 		
+=======
+>>>>>>> master_with_toolbar
 		player = new Player(dungeonMap);
 		
 		/* Creates the enemies */
@@ -144,6 +151,14 @@ public class Game extends Application {
 //			trap.stopMoving();
 //		}
 		
+		Rectangle2D primaryScreenBounds = Screen.getPrimary().getVisualBounds();
+
+        //set Stage boundaries to visible bounds of the main screen
+		mainStage.setX(primaryScreenBounds.getMinX());
+		mainStage.setY(primaryScreenBounds.getMinY());
+		mainStage.setWidth(primaryScreenBounds.getWidth());
+		mainStage.setHeight(primaryScreenBounds.getHeight());
+		
 		/* Sets the title and displays the GUI */
 		Rectangle2D primaryScreenBounds = Screen.getPrimary().getVisualBounds();
 		mainStage.setX(primaryScreenBounds.getMinX());
@@ -154,7 +169,10 @@ public class Game extends Application {
 		mainStage.setScene(Gamescene);
 		mainStage.show();
 	}
+<<<<<<< HEAD
 	
+=======
+>>>>>>> master_with_toolbar
 
 	/* The player controls the knight with the keyboard */
 	public void movePlayer() {
@@ -172,7 +190,11 @@ public class Game extends Application {
 					//keep parameter same as digit key, handled offset in Toolbar
 					case DIGIT1: toolbar.useSlot(1); armorViewToolbar.imageProperty().set(null); break;
 					case DIGIT2: toolbar.useSlot(2); invisibleViewToolbar.imageProperty().set(null); break;
+<<<<<<< HEAD
 					case DIGIT3: toolbar.useSlot(3); keyViewToolbar.imageProperty().set(null); break;
+=======
+					case DIGIT3: toolbar.useSlot(3); keyViewToolbar.imageProperty().set(null);break;
+>>>>>>> master_with_toolbar
 					case DIGIT4: toolbar.useSlot(4); speedViewToolbar.imageProperty().set(null); break;
 					default: break;
 				}
@@ -341,8 +363,19 @@ public class Game extends Application {
 		playerView.setY(player.getPlayerLocation().y * scale);
 		root.getChildren().add(playerView);
 		
+<<<<<<< HEAD
 		/* Adds a slot for Armor Activate  */
 		Image ToolbarImage = getImage("individual.png");
+=======
+		/* Adds the door image */
+		exitView = new ImageView(getImage("door1.png"));
+		exitView.setX(dungeonMap.getExitLocation().x * scale);
+		exitView.setY(dungeonMap.getExitLocation().y * scale);
+		root.getChildren().add(exitView);
+	
+		/* Adds a slot for Armor Activate  */
+		Image ToolbarImage = getImage("Individual.png");
+>>>>>>> master_with_toolbar
 		ToolbarViewSlot1 = new ImageView(ToolbarImage);
 		ToolbarViewSlot1.setSmooth(false);
 		ToolbarViewSlot1.setFitWidth((int) ToolbarImage.getWidth());
@@ -351,7 +384,11 @@ public class Game extends Application {
 		ToolbarViewSlot1.setY(700.00);
 		
 		/* Adds a slot for Invisible Activate  */
+<<<<<<< HEAD
 		Image ToolbarImage2 = getImage("individual.png");
+=======
+		Image ToolbarImage2 = getImage("Individual.png");
+>>>>>>> master_with_toolbar
 		ToolbarViewSlot2 = new ImageView(ToolbarImage);
 		ToolbarViewSlot2.setSmooth(false);
 		ToolbarViewSlot2.setFitWidth((int) ToolbarImage.getWidth());
@@ -360,7 +397,11 @@ public class Game extends Application {
 		ToolbarViewSlot2.setY(700.00);
 		
 		/* Adds a slot for Key Activate  */
+<<<<<<< HEAD
 		Image ToolbarImage3 = getImage("individual.png");
+=======
+		Image ToolbarImage3 = getImage("Individual.png");
+>>>>>>> master_with_toolbar
 		ToolbarViewSlot3 = new ImageView(ToolbarImage);
 		ToolbarViewSlot3.setSmooth(false);
 		ToolbarViewSlot3.setFitWidth((int) ToolbarImage.getWidth());
@@ -369,7 +410,11 @@ public class Game extends Application {
 		ToolbarViewSlot3.setY(700.00);
 		
 		/* Adds a slot for Speed Activate  */
+<<<<<<< HEAD
 		Image ToolbarImage4 = getImage("individual.png");
+=======
+		Image ToolbarImage4 = getImage("Individual.png");
+>>>>>>> master_with_toolbar
 		ToolbarViewSlot4 = new ImageView(ToolbarImage);
 		ToolbarViewSlot4.setSmooth(false);
 		ToolbarViewSlot4.setFitWidth((int) ToolbarImage.getWidth());
