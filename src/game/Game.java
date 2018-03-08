@@ -28,16 +28,17 @@ public class Game extends Application {
 	Random rand = new Random();
 
 	int[][] map;
-	final int dimensions = 15;
-	final int walls = 25;
-	final int scale = 50;
+	final int dimensions = 40;
+	final int walls = 250;
+	final int scale = 25;
 
 	Player player;
 	
+	EnemyFactory enemyFactory;
 	ArrayList<Enemy> traps;
-	Enemy fireBall;
-	Enemy ghost;
-	Enemy zombie;
+	ArrayList<Enemy> fireballs;
+	ArrayList<Enemy> zombies;
+	ArrayList<Enemy> ghosts;
 	
 	DungeonMap dungeonMap;
 	
@@ -97,10 +98,14 @@ public class Game extends Application {
 		
 		/* Creates the enemies */
 		this.traps = new ArrayList<Enemy>();
-		EnemyFactory enemyFactory = new EnemyFactory();
-		fireBall = enemyFactory.getEnemy("FIRE", dungeonMap, dungeonMap.getFireLocation());
-		ghost = enemyFactory.getEnemy("GHOST", dungeonMap, dungeonMap.getGhostLocation());
-		zombie = enemyFactory.getEnemy("ZOMBIE", dungeonMap, dungeonMap.getZombieLocation());
+		this.fireballs = new ArrayList<Enemy>();
+		this.ghosts = new ArrayList<Enemy>();
+		this.zombies = new ArrayList<Enemy>();
+		
+		enemyFactory = new EnemyFactory();
+//		fireBall = enemyFactory.getEnemy("FIRE", dungeonMap, dungeonMap.getFireLocation());
+//		ghost = enemyFactory.getEnemy("GHOST", dungeonMap, dungeonMap.getGhostLocation());
+//		zombie = enemyFactory.getEnemy("ZOMBIE", dungeonMap, dungeonMap.getZombieLocation());
 
 		/*
 		 * Places all the pictures on the pane and allows the user to control the player
@@ -108,21 +113,17 @@ public class Game extends Application {
 		loadMap();
 		
 		ArrayList<Point> trapPoints = dungeonMap.getTrapLocations();
-		for (Point location : trapPoints) {
-			Enemy trap = enemyFactory.getEnemy("TRAP", dungeonMap, location);
-			trap.addToPane(root.getChildren());
-			traps.add(trap);
-			trap.startMoving();
-		}
+		spawnEnemies("TRAP", trapPoints, traps);
 		
-		fireBall.addToPane(root.getChildren());
-		ghost.addToPane(root.getChildren());
-		zombie.addToPane(root.getChildren());
+		ArrayList<Point> firePoints = dungeonMap.getFireLocations();
+		spawnEnemies("FIRE", firePoints, fireballs);
+		
+		ArrayList<Point> ghostPoints = dungeonMap.getGhostLocations();
+		spawnEnemies("GHOST", ghostPoints, ghosts);
+		
+		ArrayList<Point> zombiePoints = dungeonMap.getZombieLocations();
+		spawnEnemies("ZOMBIE", zombiePoints, zombies);
 
-		fireBall.startMoving();
-		ghost.startMoving();
-		zombie.startMoving();
-		
 		movePlayer();
 //		useToolbar();
 //		fireBall.stopMoving();
@@ -134,6 +135,16 @@ public class Game extends Application {
 		mainStage.setTitle("Maze Game");
 		mainStage.setScene(Gamescene);
 		mainStage.show();
+	}
+	
+	public void spawnEnemies(String type, ArrayList<Point> enemyLocations, ArrayList<Enemy> enemyList) {
+		for (Point location : enemyLocations) {
+			Enemy enemy = enemyFactory.getEnemy(type, player, dungeonMap, location);
+			enemy.addToPane(root.getChildren());
+			enemyList.add(enemy);
+			Thread enemyThread = new Thread(enemy);
+			enemyThread.start();
+		}
 	}
 	
 //	//The key bindings for all of the toolbar items.
@@ -315,7 +326,7 @@ public class Game extends Application {
 		} else {
 			file = "file:images//" + type;
 		}
-		Image image = new Image(file, 50, 50, true, true);
+		Image image = new Image(file, scale, scale, true, true);
 		return image;
 	}
 }

@@ -23,6 +23,10 @@ public class DungeonMap {
 	private int[][] map;
 	private ArrayList<Integer> openSpots;
 	private ArrayList<Point> trapLocations;
+	private ArrayList<Point> fireLocations;
+	private ArrayList<Point> ghostLocations;
+	private ArrayList<Point> zombieLocations;
+	
 	private Point playerLocation;
 	private Point fireLocation;
 	private Point ghostLocation;
@@ -34,7 +38,7 @@ public class DungeonMap {
 	private Point keyLocation;
 	private int dimensions;
 	private int walls;
-	private int traps = 3;
+//	private int traps = 3;
 	@SuppressWarnings("unused")
 	private Point[] RandomItems;
 	
@@ -46,7 +50,14 @@ public class DungeonMap {
 		this.dimensions = dimensions;
 		this.walls = walls;
 		openSpots = new ArrayList<Integer>();
+		
+		/* ArrayLists to store all the enemy locations */
 		trapLocations = new ArrayList<Point>();
+		fireLocations = new ArrayList<Point>();
+		ghostLocations = new ArrayList<Point>();
+		zombieLocations = new ArrayList<Point>();
+		
+		/* Builds the map */
 		buildMap();
 	}
 	
@@ -61,18 +72,18 @@ public class DungeonMap {
 	}
 	
 	/* Returns the fireball's location */
-	public Point getFireLocation() {
-		return fireLocation;
+	public ArrayList<Point> getFireLocations() {
+		return fireLocations;
 	}
 	
-	/* Returns the fireball's location */
-	public Point getGhostLocation() {
-		return ghostLocation;
+	/* Returns the ghost locations */
+	public ArrayList<Point> getGhostLocations() {
+		return ghostLocations;
 	}
 	
-	/* Returns the fireball's location */
-	public Point getZombieLocation() {
-		return zombieLocation;
+	/* Returns the zombie locations */
+	public ArrayList<Point> getZombieLocations() {
+		return zombieLocations;
 	}
 	
 	/* Returns the trap locations */
@@ -150,25 +161,41 @@ public class DungeonMap {
 	
 	/* Sets all trap and wall locations */
 	private void setLocations() {
-		/* Generate the traps */
-		for (int i=0; i<traps; ++i) {
-			Point trapSpot = generateLocation();
-			trapLocations.add(trapSpot);
-		}
-		
+
 		/* Generate the inner walls */
 		for (int i=0; i<walls; ++i) {
-			Point wallSpot = generateLocation();
-			map[wallSpot.x][wallSpot.y] = 1;
+			Point point = generateLocation();
+			map[point.x][point.y] = 1;
+		}
+		
+		/* Generate the trap */
+		for (int i=0; i<1; ++i) {
+			Point point = generateLocation();
+			trapLocations.add(point);
+		}
+		
+		/* Generate the fireballs */
+		for (int i=0; i<1; ++i) {
+			Point point = generateLocation();
+			fireLocations.add(point);
+		}
+		
+		/* Generate the zombies */
+		for (int i=0; i<1; ++i) {
+			Point point = generateLocation();
+			zombieLocations.add(point);
+		}
+		
+		/* Generate the ghosts */
+		for (int i=0; i<1; ++i) {
+			Point point = generateLocation();
+			ghostLocations.add(point);
 		}
 	}
 	
 	/* Sets the player, enemies, and item locations */
 	private void setObjectives() {
 		playerLocation = generateLocation();
-		fireLocation = generateLocation();
-		zombieLocation = generateLocation();
-		ghostLocation = generateLocation();
 		treasureLocation = generateLocation();
 		armorLocation = generateLocation();
 		invisibleLocation = generateLocation();

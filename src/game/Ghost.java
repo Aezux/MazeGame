@@ -6,21 +6,26 @@ import javafx.collections.ObservableList;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import java.util.ArrayList;
+import java.util.Observable;
 
 /* The ghost class */
 public class Ghost extends Enemy{
 
 	private Point currentLocation;
+	private Observable player;
+	private DungeonMap map;
 	private Movement movement;
 	private Image image;
 	private ImageView ghostImage;
 	private int sleepTime;
 	
 	/* Constructor */
-	public Ghost(DungeonMap map, Point currentLocation) {
+	public Ghost(DungeonMap map, Observable player, Point currentLocation) {
+		this.map = map;
+		player.addObserver(this);
+		this.player = player;
 		this.currentLocation = currentLocation;
 		this.movement = new Patrol2(map, currentLocation);
-//		this.threads = Executors.newFixedThreadPool(10);
 		this.sleepTime = 150;
 		setImage();
 	}
@@ -30,35 +35,41 @@ public class Ghost extends Enemy{
 		sceneGraph.add(ghostImage);
 	}
 	
-	/* Launches the ghost thread */
-	public void startMoving() {
-		threads.submit(() -> update());
-	}
-	
-	/* Stops the thread */
-	public void stopMoving() {
-		gameShouldRun = false;
-		threads.shutdownNow();
-	}
-	
 	/* Sets the movement */
 	public void changeMovement(Movement movement) {
 		this.movement = movement;
 	}
 	
-	/* Updates the movement */
-	private void update() {
-		ArrayList<Point> moves = movement.getPath(currentLocation);
+	/* The player notifies the enemies */
+	public void update(Observable o, Object arg) {
+		if (o instanceof Player) {
+			this.movement = new Chase(map, currentLocation);
+			sleepTime = 100;
+		}
+	}
+	
+	/* Launches the ghost thread */
+	public void run() {
 		while (gameShouldRun) {
+			ArrayList<Point> moves = movement.getPath(currentLocation);
 			/* Moves around */
 			for (Point move : moves) {
 				try {/* Put the thread to sleep */
 					Thread.sleep(sleepTime);
 				} catch (Exception e) {}
+				
+				/* Gets players location and update coordinates */
+				Point playerLocation = map.getPlayerLocation();
 				updateImage(currentLocation.x, move.x, currentLocation.y, move.y);
 				currentLocation.setLocation(move.x, move.y);
 				ghostImage.setX(move.x * scale);
 				ghostImage.setY(move.y * scale);
+				
+				/* If enemy touches player then take away one life */
+				if (playerLocation.equals(move)) {
+					Player user = (Player)player;
+					user.loseLife();
+				}
 			}
 		}
 	}

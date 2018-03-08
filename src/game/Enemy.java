@@ -1,16 +1,13 @@
 package game;
 
+import java.util.Observer;
 import javafx.collections.ObservableList;
 import javafx.scene.Node;
 import javafx.scene.image.Image;
-import java.util.concurrent.ExecutorService;
-import java.util.concurrent.Executors;
 
-public abstract class Enemy {
-	protected int scale = 50;
+public abstract class Enemy implements Runnable, Observer {
+	protected int scale = 25;
 	protected boolean gameShouldRun = true;
-	protected ExecutorService threads = Executors.newFixedThreadPool(10);
-	
 	
 	/* Gets the correct image regardless of what operating system you are using */
 	protected Image getImage(String type) {
@@ -20,15 +17,9 @@ public abstract class Enemy {
 		} else {
 			file = "file:images//" + type;
 		}
-		Image image = new Image(file, 50, 50, true, true);
+		Image image = new Image(file, scale, scale, true, true);
 		return image;
 	}
-	
-	/* Launches the threads */
-	public void startMoving() {}
-	
-	/* Stops the threads */
-	public void stopMoving() {}
 
 	/* Adds enemies to the pane */
 	public void addToPane(ObservableList<Node> children) {}

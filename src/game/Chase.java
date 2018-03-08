@@ -1,6 +1,7 @@
 package game;
 
 import java.awt.Point;
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashSet;
 import java.util.LinkedList;
@@ -115,6 +116,13 @@ public class Chase extends Move {
     		}
     	}
     	return bestPoint;
+    }
+    
+    /* Gets a path of points to follow */
+    public ArrayList<Point> getPath(Point currentLocation) {
+    	ArrayList<Point> list = new ArrayList<Point>();
+    	list.add(nextPoint(currentLocation));
+    	return list;
     }
     
     /* Overwritten the equals method */

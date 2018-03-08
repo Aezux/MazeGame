@@ -1,15 +1,18 @@
 package game;
 
 import java.awt.Point;
+import java.util.Observable;
+
 import javafx.scene.image.Image;
  
 @SuppressWarnings("unused")
-public class Player {
+public class Player extends Observable {
 
 	private int[][] map;
 	private DungeonMap dungeon;
 	private Point currentLocation;
 	private boolean hasKey = false;
+	private int scale = 25;
 	private int lives;
 	private Image image;
 	private int X, Y;
@@ -41,6 +44,7 @@ public class Player {
 	
 	/* Takes away a life from the player */
 	public void loseLife() {
+		System.out.println("Lost a life");
 		--lives;
 		if (lives <= 0) {
 			System.out.println("You Lose!");
@@ -60,6 +64,12 @@ public class Player {
 	/* Gets the new image of the player */
 	public Image newImage() {
 		return image;
+	}
+	
+	/* Updates the Observers that the player has the key */
+	public void UserhasKey() {
+		setChanged();
+		notifyObservers();
 	}
 	
 	/* Move the player */
@@ -86,7 +96,7 @@ public class Player {
 		} else {
 			file = "file:images//" + type;
 		}
-		Image image = new Image(file, 50, 50, true, true);
+		Image image = new Image(file, scale, scale, true, true);
 		return image;
 	}
 }
