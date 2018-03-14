@@ -8,7 +8,7 @@ public class Player extends Observable {
 
 	private int[][] map;
 	private int scale = 25;
-	private int lives;
+	public int lives;
 	private int X, Y;
 	
 	private DungeonMap dungeon;
@@ -54,6 +54,9 @@ public class Player extends Observable {
 			lostGame = true;
 		}
 	}
+	public int getLife() {
+		return lives;
+	}
 	
 	/* Checks if the player has won */
 	public boolean hasWon() {
@@ -64,12 +67,12 @@ public class Player extends Observable {
 	public boolean hasLost() {
 		return lostGame;
 	}
-
+	/* Sets openChest to true */
 	public void openChest()
 	{
 		openChest = true;
 	}
-	
+	/* Checks if chest has been opened */
 	public boolean hasOpenedChest()
 	{
 		return openChest;

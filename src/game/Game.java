@@ -132,6 +132,8 @@ public class Game extends Application {
 		
 		mainStage.setTitle("Maze Game");
 		mainStage.setScene(Gamescene);
+		
+		
 		mainStage.show();
 	}
 	
@@ -153,6 +155,7 @@ public class Game extends Application {
 		Scene overScene = new Scene(screen, scale*dimensions, scale*dimensions);
 		
 		mainStage.setScene(overScene);
+		BackgroundMusic.backgroundmusic.stop();
 	}
 	
 	/* Scene for when the player wins */
