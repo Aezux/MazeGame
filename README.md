@@ -1,1 +1,1 @@
-# MazeGame
+![Scheme](screenshot.png)
